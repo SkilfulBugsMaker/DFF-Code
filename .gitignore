@@ -5,9 +5,11 @@ kitti_rm_ground
 data_processed_maxcut_35_20k_2k_8192
 *.log
 inference/
-
-
-
+log_train/train/
+log_train/train.py
+log_train.txt
+log_evaluate/
+log_evaluate*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
