@@ -1,0 +1,2 @@
+model_checkpoint_path: "n_feat"
+all_model_checkpoint_paths: "n_feat"

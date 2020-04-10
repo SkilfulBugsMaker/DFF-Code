@@ -196,17 +196,23 @@ gt_color_map = {
 }
 # runing network ==============================================================
 time_dict = {}
-saver = tf.train.Saver()
 graph = tf.get_default_graph()
 gpu_options = tf.GPUOptions(allow_growth=True)
 
 variables = tf.contrib.framework.get_variables_to_restore()
-print(variables)
+n_feat_variables= [v for v in variables if v.name.split('/')[0] != 'output']
+n_task_variables= [v for v in variables if v.name.split('/')[0] =='output']
+
+saver_feat = tf.train.Saver(n_feat_variables)
+saver_task = tf.train.Saver(n_task_variables)
 with tf.Session(graph=graph,
     config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
     sess.run(tf.variables_initializer(tf.global_variables()))
     sess.run(tf.variables_initializer(tf.local_variables()))
     model_path = tf.train.latest_checkpoint(CHECKPOINT_PATH)
     print('Restore from checkpoint %s' % model_path)
-    saver.restore(sess, model_path)
+    saver_feat.restore(sess, model_path)
+    saver_feat.save(sess, 'model_split/n_feat/n_feat')
+    saver_task.restore(sess, model_path)
+    saver_task.save(sess, 'model_split/n_task/n_task')
     previous_step = sess.run(global_step)
