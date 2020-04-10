@@ -31,7 +31,7 @@ parser.add_argument('--decay_step', type=int, default=200000, help='Decay step f
 parser.add_argument('--decay_rate', type=float, default=0.7, help='Decay rate for lr decay [default: 0.7]')
 FLAGS = parser.parse_args()
 
-os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
+# os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
 
 EPOCH_CNT = 0
 

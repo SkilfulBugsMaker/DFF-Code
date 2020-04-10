@@ -113,6 +113,32 @@
             {
                 "graph_level": 1,
                 "kwargs": {
+                    "auto_offset": true,
+                    "auto_offset_MLP_depth_list": [
+                        64,
+                        3
+                    ],
+                    "auto_offset_MLP_feature_activation_type": "ReLU",
+                    "auto_offset_MLP_normalization_type": "NONE",
+                    "edge_MLP_activation_type": "ReLU",
+                    "edge_MLP_depth_list": [
+                        300,
+                        300
+                    ],
+                    "edge_MLP_normalization_type": "NONE",
+                    "update_MLP_activation_type": "ReLU",
+                    "update_MLP_depth_list": [
+                        300,
+                        300
+                    ],
+                    "update_MLP_normalization_type": "NONE"
+                },
+                "scope": "layer4",
+                "type": "scatter_max_graph_auto_center_net"
+            },
+            {
+                "graph_level": 1,
+                "kwargs": {
                     "activation_type": "ReLU",
                     "normalization_type": "NONE"
                 },
