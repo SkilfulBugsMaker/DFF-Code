@@ -5,6 +5,7 @@ kitti_rm_ground
 data_processed_maxcut_35_20k_2k_8192
 log*
 *.log
+inference/*
 
 
 
