@@ -149,19 +149,15 @@ class MultiLayerFastLocalGraphModelV2(object):
         return tfeatures
 
     def predict(self, tfeatures, is_training):
-        with slim.arg_scope([slim.batch_norm], is_training=is_training), \
-             slim.arg_scope([slim.fully_connected], weights_regularizer=self._regularizer):
-                predictor_config = self._layer_configs[-1]
-                assert (predictor_config['type'] == 'classaware_predictor' or
-                        predictor_config['type'] == 'classaware_predictor_128' or
-                        predictor_config['type'] == 'classaware_separated_predictor')
-                predictor = self._default_layers_type[predictor_config['type']]
-                with tf.variable_scope(predictor_config['scope'], reuse=tf.AUTO_REUSE):
-                    logits, box_encodings = predictor.apply_regular(tfeatures,
-                                                                num_classes=self.num_classes,
-                                                                box_encoding_len=self.box_encoding_len,
-                                                                **predictor_config['kwargs'])
-                    print("Prediction %d classes" % self.num_classes)
+        with slim.arg_scope([slim.batch_norm], is_training=is_training), slim.arg_scope([slim.fully_connected], weights_regularizer=self._regularizer):
+            predictor_config = self._layer_configs[-1]
+            assert (predictor_config['type'] == 'classaware_predictor' or
+                predictor_config['type'] == 'classaware_predictor_128' or
+                predictor_config['type'] == 'classaware_separated_predictor')
+            predictor = self._default_layers_type[predictor_config['type']]
+            with tf.variable_scope(predictor_config['scope'], reuse=tf.AUTO_REUSE):
+                logits, box_encodings = predictor.apply_regular(tfeatures, num_classes=self.num_classes, box_encoding_len=self.box_encoding_len, **predictor_config['kwargs'])
+                print("Prediction %d classes" % self.num_classes)
         return logits, box_encodings
 
     def postprocess(self, logits):
