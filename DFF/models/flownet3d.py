@@ -22,19 +22,27 @@ def placeholder_inputs(batch_size, num_point1, num_feat1, num_point2, num_feat2)
     return pc1, pc2, labels_pl, masks_pl
 
 
-def get_model(pc1, pc2, is_training, bn_decay=None, reuse=False):
+def get_flownet3d_model(pc1_xyz, pc1_feat, pc2_xyz, pc2_feat, is_training, bn_decay=None, reuse=False):
     # Modify
-    """ FlowNet3D, for evaluating on KITTI
-        input: Bx(N1+N2)x3,
-        output: BxN1x3 """
+    """ FlowNet3D
+        input:
+            batch_size = 1
+            pc1_xyz: [batch_size, N1, 3]
+            pc1_feat: [batch_size, N1, c]
+            pc2_xyz: [batch_size, N2, 3]
+            pc2_feat: [batch_size, N2, c]
+        output:
+            net(optical flow): [batch_size, N1, 3]
+            end_points(down sampling point, option): dict
+    """
     end_points = {}
     # batch_size = pc1.get_shape()[0].value
     # num_point = pc1.get_shape()[1].value    # num_point1
 
-    l0_xyz_f1 = pc1[:, :, 0:3]
-    l0_points_f1 = pc1[:, :, 3:]
-    l0_xyz_f2 = pc2[:, :, 0:3]
-    l0_points_f2 = pc2[:, :, 3:]
+    l0_xyz_f1 = pc1_xyz
+    l0_points_f1 = pc1_feat
+    l0_xyz_f2 = pc2_xyz
+    l0_points_f2 = pc2_feat
 
     RADIUS1 = 0.5
     RADIUS2 = 1.0
@@ -80,13 +88,15 @@ def get_model(pc1, pc2, is_training, bn_decay=None, reuse=False):
     net = tf_util.conv1d(l0_feat_f1, 128, 1, padding='VALID', bn=True, is_training=is_training, scope='fc1', bn_decay=bn_decay)
     net = tf_util.conv1d(net, 3, 1, padding='VALID', activation_fn=None, scope='fc2')
 
-    return net, end_points
+    return net
 
 
 if __name__ == '__main__':
     # Not tested
     with tf.Graph().as_default():
-        pc1 = tf.zeros((32, 1024, 3))
-        pc2 = tf.zeros((32, 1024, 3))
-        outputs = get_model(pc1, pc2, tf.constant(True))
+        pc1_xyz = tf.zeros((32, 1024, 3))
+        pc1_feat = tf.zeros((32, 1024, 4))
+        pc2_xyz = tf.zeros((32, 1024, 3))
+        pc2_feat = tf.zeros((32, 1024, 4))
+        outputs = get_flownet3d_model(pc1_xyz, pc1_feat, pc2_xyz, pc2_feat, tf.constant(True))
         print(outputs)
