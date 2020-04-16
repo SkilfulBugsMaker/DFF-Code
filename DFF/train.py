@@ -228,10 +228,13 @@ for gi in range(NUM_GPU):
             model = get_model(config['model_name'])(num_classes=NUM_CLASSES,
                 box_encoding_len=BOX_ENCODING_LEN, mode='train',
                 **config['model_kwargs'])
-            t_features = model.extract_features(
+            t_features, t_logits, t_pred_box = model.predict(
                 t_initial_vertex_features, t_vertex_coord_list,
                 t_keypoint_indices_list, t_edges_list, t_is_training)
-            t_logits, t_pred_box = model.perdict(t_features, t_is_training)
+            # t_features = model.extract_features(
+            #     t_initial_vertex_features, t_vertex_coord_list,
+            #     t_keypoint_indices_list, t_edges_list, t_is_training)
+            # t_logits, t_pred_box = model.predict(t_features, t_is_training)
             t_probs = model.postprocess(t_logits)
             t_predictions = tf.argmax(t_probs, axis=-1, output_type=tf.int32)
             t_loss_dict = model.loss(t_logits, t_class_labels, t_pred_box,
@@ -252,7 +255,7 @@ for gi in range(NUM_GPU):
                  't_encoded_gt_boxes': t_encoded_gt_boxes,
                  't_valid_gt_boxes': t_valid_gt_boxes,
                  't_is_training': t_is_training,
-                 't_features': t_features,
+                 #'t_features': t_features,
                  't_logits': t_logits,
                  't_pred_box': t_pred_box,
                  't_probs': t_probs,
@@ -304,7 +307,7 @@ t_total_loss_cross_gpu = tf.reduce_mean([t['t_total_loss']
 t_class_labels = input_tensor_sets[0]['t_class_labels']
 t_predictions = input_tensor_sets[0]['t_predictions']
 t_probs = input_tensor_sets[0]['t_probs']
-
+t_features_shape_op = tf.shape(t_features)
 t_classwise_loc_loss_update_ops = {}
 for class_idx in range(NUM_CLASSES):
     for bi in range(BOX_ENCODING_LEN):
@@ -408,10 +411,12 @@ with tf.control_dependencies(update_ops):
             grads_cross_gpu.append(grads)
 grads_cross_gpu = average_gradients(grads_cross_gpu)
 train_op = optimizer.apply_gradients(grads_cross_gpu, global_step=global_step)
+
 fetches = {
+    't_features_shape': t_features_shape_op,
     'train_op': train_op,
     'step': global_step,
-    'learning_rate': t_learning_rate,
+    'learning_rate': t_learning_rate
 }
 fetches.update(metrics_update_ops)
 
@@ -528,6 +533,7 @@ with tf.Session(graph=graph,
         frame_idx_list = np.random.permutation(NUM_TEST_SAMPLE)
         for batch_idx in range(0, NUM_TEST_SAMPLE-batch_size+1, batch_size):
             mid_time = time.time()
+            print("batch_idx: ", batch_idx)
             device_batch_size = batch_size//(COPY_PER_GPU*NUM_GPU)
             total_feed_dict = {}
             for gi in range(COPY_PER_GPU*NUM_GPU):
@@ -580,6 +586,9 @@ with tf.Session(graph=graph,
                 batch_ctr += 1
             else:
                 results = sess.run(fetches, feed_dict=total_feed_dict)
+            print('len vertex_coord_list: ', len(vertex_coord_list), len(vertex_coord_list[0]), vertex_coord_list[0][0])
+            print('len keypoint_indices_list: ', len(keypoint_indices_list), len(keypoint_indices_list[0]), keypoint_indices_list[0][0])
+            print('tfeatures_shape', results['t_features_shape'])
             if 'max_steps' in train_config and train_config['max_steps'] > 0:
                 if results['step'] >= train_config['max_steps']:
                     checkpoint_path = os.path.join(train_config['train_dir'],
