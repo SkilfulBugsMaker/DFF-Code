@@ -299,6 +299,7 @@ for gi in range(NUM_GPU):
             pc_non_key_feat = tf.expand_dims(t_initial_vertex_features1, 0)
             pc_key_xyz = tf.expand_dims(t_vertex_coord_list[0], 0)
             pc_key_feat = tf.expand_dims(t_initial_vertex_features, 0)
+            print(pc_non_key_xyz, pc_non_key_feat, pc_key_feat)
             # [1, N_non_key ,3]
             optical_flow_non_key_to_key = get_flownet3d_model(
                 pc_non_key_xyz,
@@ -306,36 +307,38 @@ for gi in range(NUM_GPU):
                 pc_key_xyz,
                 pc_key_feat,
                 is_training=t_is_training)
-
+            print(optical_flow_non_key_to_key)
             # down-sampling optical flow
             # [1, N_non_key_graph, 1 ,3]
             optical_flow_non_key_to_key_graph_points = tf.gather(
                 optical_flow_non_key_to_key, t_keypoint_indices_list1[-1], axis=1
             )
-
+            print(optical_flow_non_key_to_key_graph_points)
             # [1, N_non_key_graph ,3]
             optical_flow_non_key_to_key_graph_points = tf.squeeze(
                 optical_flow_non_key_to_key_graph_points, axis=2
             )
+            print(optical_flow_non_key_to_key_graph_points)
             # key frame graph point xyz
             # [1, N_key_graph ,3]
             xyz = tf.expand_dims(t_vertex_coord_list[-1], 0)
+            print('xyz: ', xyz)
             # non key frame graph point xyz
             # [1, N_non_key_graph, 3]
             xyz1 = tf.expand_dims(t_vertex_coord_list1[-1], 0)
-
+            print('xyz1: ', xyz1)
             # [1, N_pc_non_key_graph, 300]
             t_features1 = feature_flow(
                 xyz,
                 xyz1,
                 optical_flow_non_key_to_key_graph_points,
-                t_features,
+                tf.expand_dims(t_features, 0),
                 n_sample=4
             )
             # [N_pc_non_key_graph, 300]
             t_features1 = tf.squeeze(t_features1, axis=0)
             # ======================= modify above =======================
-
+            print(t_features, t_features1)
             t_logits, t_pred_box = model.predict(t_features, t_is_training)
             t_probs = model.postprocess(t_logits)
             t_predictions = tf.argmax(t_probs, axis=-1, output_type=tf.int32)
@@ -668,20 +671,30 @@ else:
             per_process_gpu_memory_fraction=train_config['gpu_memusage'])
 batch_ctr = 0
 batch_gradient_list = []
+variables = tf.contrib.framework.get_variables_to_restore()
+for v in variables:
+    print(v.name)
+# init = tf.global_variables_initializer()
 with tf.Session(graph=graph,
     config=tf.ConfigProto(
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:
+    print('before init')
     sess.run(tf.variables_initializer(tf.global_variables()))
+    # sess.run(init)
+    print("after init")
     states = tf.train.get_checkpoint_state(train_config['train_dir'])
     if states is not None:
         print('Restore from checkpoint %s' % states.model_checkpoint_path)
         saver.restore(sess, states.model_checkpoint_path)
         saver.recover_last_checkpoints(states.all_model_checkpoint_paths)
+    print("before previous_step")
     previous_step = sess.run(global_step)
     local_variables_initializer = tf.variables_initializer(tf.local_variables())
     for epoch_idx in range((previous_step*batch_size)//NUM_TEST_SAMPLE,
     train_config['max_epoch']):
+        
         sess.run(local_variables_initializer)
+        print("in epoch")
         start_time = time.time()
         # =============== modify======================
         # generate key frame idx list
