@@ -1,17 +1,21 @@
 # Need test, not finish
+import os
+import sys
+
+sys.path.append('../utils/')
+sys.path.append('../tf_ops/grouping/')
 
 import tensorflow as tf
 import numpy as np
 import math
-import sys
-import os
-import tf_util
-from pointnet_util import *
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(BASE_DIR)
-sys.path.append(os.path.join(BASE_DIR, 'utils'))
-sys.path.append(os.path.join(ROOT_DIR, 'tf_ops/grouping'))
+import models.tf_util
+from models.pointnet_util import *
+
+#BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+#ROOT_DIR = os.path.dirname(BASE_DIR)
+#sys.path.append(os.path.join(ROOT_DIR, '../utils'))
+#sys.path.append(os.path.join(ROOT_DIR, '../tf_ops/grouping'))
 
 from tf_grouping import query_ball_point, group_point, knn_point
 
@@ -105,6 +109,8 @@ def get_flownet3d_model(pc1_xyz, pc1_feat, pc2_xyz, pc2_feat, is_training, bn_de
 
 if __name__ == '__main__':
     # Not tested
+    #import tf_util
+    print(tf_util)
     with tf.Graph().as_default():
         pc1_xyz = tf.zeros((32, 1024, 3))
         pc1_feat = tf.zeros((32, 1024, 4))

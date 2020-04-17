@@ -8,6 +8,11 @@ import copy
 from sys import getsizeof
 from multiprocessing import Pool, Queue, Process
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+sys.path.append(os.path.join(ROOT_DIR, 'tf_ops/'))
+sys.path.append(os.path.join(ROOT_DIR, 'utils/'))
+
 import numpy as np
 import tensorflow as tf
 
@@ -15,7 +20,7 @@ from dataset.kitti_dataset import KittiDataset
 from models.graph_gen import get_graph_generate_fn
 from models.models import get_model
 
-from model.flownet3d import get_flownet3d_model, feature_flow
+from models.flownet3d import get_flownet3d_model, feature_flow
 from tf_grouping import query_ball_point, group_point, knn_point
 
 from models.box_encoding import get_box_decoding_fn, get_box_encoding_fn,\
@@ -28,9 +33,6 @@ from util.config_util import save_config, save_train_config, \
 from util.summary_util import write_summary_scale
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(BASE_DIR)
-sys.path.append(os.path.join(ROOT_DIR, 'tf_ops/grouping'))
 
 parser = argparse.ArgumentParser(description='Training of PointGNN')
 parser.add_argument('train_config_path', type=str,
@@ -287,7 +289,7 @@ for gi in range(NUM_GPU):
                 box_encoding_len=BOX_ENCODING_LEN, mode='train',
                 **config['model_kwargs'])
             # key frame features
-            t_features = model.predict(
+            t_features = model.extract_features(
                 t_initial_vertex_features, t_vertex_coord_list,
                 t_keypoint_indices_list, t_edges_list, t_is_training)
 
