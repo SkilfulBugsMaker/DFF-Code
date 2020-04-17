@@ -307,7 +307,6 @@ t_total_loss_cross_gpu = tf.reduce_mean([t['t_total_loss']
 t_class_labels = input_tensor_sets[0]['t_class_labels']
 t_predictions = input_tensor_sets[0]['t_predictions']
 t_probs = input_tensor_sets[0]['t_probs']
-t_features_shape_op = tf.shape(t_features)
 t_classwise_loc_loss_update_ops = {}
 for class_idx in range(NUM_CLASSES):
     for bi in range(BOX_ENCODING_LEN):
@@ -412,8 +411,12 @@ with tf.control_dependencies(update_ops):
 grads_cross_gpu = average_gradients(grads_cross_gpu)
 train_op = optimizer.apply_gradients(grads_cross_gpu, global_step=global_step)
 
+
+t_features_shape_op = tf.shape(t_features)
+t_vertex_coord_list_shape_op = tf.shape(t_vertex_coord_list)
 fetches = {
-    't_features_shape': t_features_shape_op,
+#    't_features_shape': t_features_shape_op,
+#    't_vertex_coord_list_shape': t_vertex_coord_list_shape_op,
     'train_op': train_op,
     'step': global_step,
     'learning_rate': t_learning_rate
@@ -519,6 +522,10 @@ with tf.Session(graph=graph,
     config=tf.ConfigProto(
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:
     sess.run(tf.variables_initializer(tf.global_variables()))
+    
+    writer = tf.summary.FileWriter('./graph_log/', sess.graph)
+    writer.close()
+    
     states = tf.train.get_checkpoint_state(train_config['train_dir'])
     if states is not None:
         print('Restore from checkpoint %s' % states.model_checkpoint_path)
@@ -540,6 +547,7 @@ with tf.Session(graph=graph,
                 batch_frame_idx_list = frame_idx_list[
                     batch_idx+\
                     gi*device_batch_size:batch_idx+(gi+1)*device_batch_size]
+                print("batch_frame_idx_list", batch_frame_idx_list, batch_frame_idx_list[0])
                 input_v, vertex_coord_list, keypoint_indices_list, edges_list, \
                 cls_labels, encoded_boxes, valid_boxes \
                     = data_provider.provide_batch(batch_frame_idx_list)
@@ -587,8 +595,11 @@ with tf.Session(graph=graph,
             else:
                 results = sess.run(fetches, feed_dict=total_feed_dict)
             print('len vertex_coord_list: ', len(vertex_coord_list), len(vertex_coord_list[0]), vertex_coord_list[0][0])
-            print('len keypoint_indices_list: ', len(keypoint_indices_list), len(keypoint_indices_list[0]), keypoint_indices_list[0][0])
-            print('tfeatures_shape', results['t_features_shape'])
+            print('len keypoint_indices_list: ', len(keypoint_indices_list), keypoint_indices_list[0].shape)
+            print("vertex_coord_list.shape: ", vertex_coord_list[0].shape,vertex_coord_list[1].shape, vertex_coord_list[2].shape)
+            print('input_v,shape: ', input_v.shape)
+            # print('tfeatures_shape: ', results['t_features_shape'])
+            # print('t_vertex_coord_list_shape: ', results['t_vertex_coord_list_shape'])
             if 'max_steps' in train_config and train_config['max_steps'] > 0:
                 if results['step'] >= train_config['max_steps']:
                     checkpoint_path = os.path.join(train_config['train_dir'],
