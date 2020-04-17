@@ -21,7 +21,7 @@ from models.graph_gen import get_graph_generate_fn
 from models.models import get_model
 
 from models.flownet3d import get_flownet3d_model, feature_flow
-from tf_grouping import query_ball_point, group_point, knn_point
+
 
 from models.box_encoding import get_box_decoding_fn, get_box_encoding_fn,\
     get_encoding_len
@@ -537,11 +537,16 @@ metrics_update_ops.update(t_mAP_update_ops)
 metrics_update_ops.update(t_classwise_loc_loss_update_ops)
 
 # optimizers ================================================================
-global_step = tf.Variable(0, dtype=tf.int32, trainable=False)
+global_step = tf.Variable(0, dtype=tf.int32, trainable=False, name="global_step")
 t_learning_rate = tf.train.exponential_decay(train_config['initial_lr'],
     global_step, train_config['decay_step'], train_config['decay_factor'],
     staircase=train_config.get('is_staircase', True))
 update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+for op in update_ops:
+    print(op)
+variables = tf.get_collection(tf.GraphKeys.VARIABLES)
+for v in variables:
+    print(v)
 optimizer_dict = {
     'sgd': tf.train.GradientDescentOptimizer,
     'momentum': tf.train.MomentumOptimizer,
@@ -671,9 +676,7 @@ else:
             per_process_gpu_memory_fraction=train_config['gpu_memusage'])
 batch_ctr = 0
 batch_gradient_list = []
-variables = tf.contrib.framework.get_variables_to_restore()
-for v in variables:
-    print(v.name)
+
 # init = tf.global_variables_initializer()
 with tf.Session(graph=graph,
     config=tf.ConfigProto(
