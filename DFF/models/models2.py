@@ -76,7 +76,7 @@ class MultiLayerFastLocalGraphModelV2(object):
         assert mode in ['train', 'eval', 'test'], 'Unsupported mode'
         self._mode = mode
 
-    def extract_features(self,
+    def predict(self,
         t_initial_vertex_features,
         t_vertex_coord_list,
         t_keypoint_indices_list,
@@ -101,7 +101,7 @@ class MultiLayerFastLocalGraphModelV2(object):
             pooling layer, it outputs a reduced number of vertices, aka. the
             keypoints. t_keypoint_indices_list[i] is the indices of those
             keypoints. For a gnn layer, it does not reduce the vertex number,
-            thus t_keypoint_indices_list[i] should be set to 'None'.NoneNONENONENONE
+            thus t_keypoint_indices_list[i] should be set to 'None'.
             t_edges_list: a list of [Ki, 2] tensors. t_edges_list[i] are edges
             for the i-th graph. it contains Ki pair of (source, destination)
             vertex indices.
@@ -111,7 +111,8 @@ class MultiLayerFastLocalGraphModelV2(object):
         localization.
         """
         with slim.arg_scope([slim.batch_norm], is_training=is_training), \
-             slim.arg_scope([slim.fully_connected], weights_regularizer=self._regularizer):
+            slim.arg_scope([slim.fully_connected],
+                weights_regularizer=self._regularizer):
                 tfeatures_list = []
                 tfeatures = t_initial_vertex_features
                 tfeatures_list.append(tfeatures)
@@ -146,20 +147,21 @@ class MultiLayerFastLocalGraphModelV2(object):
 
                         tfeatures_list.append(tfeatures)
                         print('Feature Dim:' + str(tfeatures.shape[-1]))
-                        print('tfeature_shape:', tfeatures.shape)
-        return tfeatures_list[-1]
-
-    def predict(self, tfeatures, is_training):
-        with slim.arg_scope([slim.batch_norm], is_training=is_training), slim.arg_scope([slim.fully_connected], weights_regularizer=self._regularizer):
-            predictor_config = self._layer_configs[-1]
-            assert (predictor_config['type'] == 'classaware_predictor' or
-                predictor_config['type'] == 'classaware_predictor_128' or
-                predictor_config['type'] == 'classaware_separated_predictor')
-            predictor = self._default_layers_type[predictor_config['type']]
-            with tf.variable_scope(predictor_config['scope'], reuse=tf.AUTO_REUSE):
-                logits, box_encodings = predictor.apply_regular(tfeatures, num_classes=self.num_classes, box_encoding_len=self.box_encoding_len, **predictor_config['kwargs'])
-                print("Prediction %d classes" % self.num_classes)
-        return logits, box_encodings
+                print("t_features", tfeatures.shape)
+                predictor_config = self._layer_configs[-1]
+                assert (predictor_config['type']=='classaware_predictor' or
+                    predictor_config['type']=='classaware_predictor_128' or
+                    predictor_config['type']=='classaware_separated_predictor')
+                predictor = self._default_layers_type[predictor_config['type']]
+                print('Final Feature Dim:'+str(tfeatures.shape[-1]))
+                with tf.variable_scope(predictor_config['scope'],
+                reuse=tf.AUTO_REUSE):
+                    logits, box_encodings =  predictor.apply_regular(tfeatures,
+                        num_classes=self.num_classes,
+                        box_encoding_len=self.box_encoding_len,
+                        **predictor_config['kwargs'])
+                    print("Prediction %d classes" % self.num_classes)
+        return tfeatures, logits, box_encodings
 
     def postprocess(self, logits):
         """Output predictions. """

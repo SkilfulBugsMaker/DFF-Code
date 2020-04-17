@@ -9,17 +9,29 @@ import tf_util
 from pointnet_util import *
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, 'utils'))
+sys.path.append(os.path.join(ROOT_DIR, 'tf_ops/grouping'))
 
+from tf_grouping import query_ball_point, group_point, knn_point
 
-def placeholder_inputs(batch_size, num_point1, num_feat1, num_point2, num_feat2):
-    # Modified
-    # 3 + num_feat1: xyz + num_feat1
-    pc1 = tf.placeholder(tf.float32, shape=(batch_size, num_point1, 3 + num_feat1))
-    pc2 = tf.placeholder(tf.float32, shape=(batch_size, num_point2, 3 + num_feat2))
-    labels_pl = tf.placeholder(tf.float32, shape=(batch_size, num_point1, 3))
-    masks_pl = tf.placeholder(tf.float32, shape=(batch_size, num_point1))
-    return pc1, pc2, labels_pl, masks_pl
+def feature_flow(xyz1, xyz2, flow_2_to_1, feature1, n_sample=4):
+    '''
+    :param xyz1: [batch_size, N1, 3]
+    :param xyz2: [batch_size, N2, 3]
+    :param flow_2_to_1: [batch_size, N2, 3]
+    :param feature1: [batch_size, N1, c]
+    :return: warped_feature: [batch_size, N2, c]
+    '''
+    xyz_2_in_1 = xyz2 + flow_2_to_1
+    # idx=[batch_size, N2, n_sample]
+    _, idx = knn_point(n_sample, xyz1, xyz_2_in_1)
+
+    # shape = [batch_size, N2, n_sample, c]
+    warped_feature = tf.gather(feature1, idx[0], axis=1)
+    # shape = [batch_size, N2, c]
+    warped_feature = tf.reduce_mean(warped_feature, axis=2)
+    return warped_feature
 
 
 def get_flownet3d_model(pc1_xyz, pc1_feat, pc2_xyz, pc2_feat, is_training, bn_decay=None, reuse=False):
