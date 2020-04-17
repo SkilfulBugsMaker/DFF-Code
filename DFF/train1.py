@@ -295,10 +295,10 @@ for gi in range(NUM_GPU):
 
             # ======================= modify below =======================
             # predict non-key frame to key frame optical flow, 几万点
-            pc_non_key_xyz = tf.reshape(t_vertex_coord_list1[0], shape=[1]+list(t_vertex_coord_list1[0].shape))
-            pc_non_key_feat = tf.reshape(t_initial_vertex_features1, shape=[1] + list(t_initial_vertex_features1.shape))
-            pc_key_xyz = tf.reshape(t_vertex_coord_list[0], shape=[1] + list(t_vertex_coord_list[0].shape))
-            pc_key_feat = tf.reshape(t_initial_vertex_features, shape=[1] + list(t_initial_vertex_features.shape))
+            pc_non_key_xyz = tf.expand_dims(t_vertex_coord_list1[0], 0)
+            pc_non_key_feat = tf.expand_dims(t_initial_vertex_features1, 0)
+            pc_key_xyz = tf.expand_dims(t_vertex_coord_list[0], 0)
+            pc_key_feat = tf.expand_dims(t_initial_vertex_features, 0)
             # [1, N_non_key ,3]
             optical_flow_non_key_to_key = get_flownet3d_model(
                 pc_non_key_xyz,
@@ -319,10 +319,10 @@ for gi in range(NUM_GPU):
             )
             # key frame graph point xyz
             # [1, N_key_graph ,3]
-            xyz = tf.reshape(t_vertex_coord_list[-1], shape=[1]+list(t_vertex_coord_list[-1].shape))
+            xyz = tf.expand_dims(t_vertex_coord_list[-1], 0)
             # non key frame graph point xyz
             # [1, N_non_key_graph, 3]
-            xyz1 = tf.reshape(t_vertex_coord_list1[-1], shape=[1]+list(t_vertex_coord_list1[-1].shape))
+            xyz1 = tf.expand_dims(t_vertex_coord_list1[-1], 0)
 
             # [1, N_pc_non_key_graph, 300]
             t_features1 = feature_flow(
