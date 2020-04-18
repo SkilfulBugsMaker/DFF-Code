@@ -102,7 +102,7 @@ def fetch_data(frame_idx):
         graph_generate_fn(cam_rgb_points.xyz, **config['graph_gen_kwargs'])
     if config['input_features'] == 'irgb':
         input_v = cam_rgb_points.attr
-    elif config['input_features'] == '0rgb':
+    elif config['input_features'] == 'rgb':
         input_v = np.hstack([np.zeros((cam_rgb_points.attr.shape[0], 1)),
             cam_rgb_points.attr[:, 1:]])
     elif config['input_features'] == '0000':
