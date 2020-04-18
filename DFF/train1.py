@@ -655,12 +655,12 @@ class DataProvider(object):
             batch_list.append(self.provide(frame_idx))
         return self._batch_data(batch_list)
 
-# data_provider = DataProvider(fetch_data, batch_data,
-#     load_dataset_to_mem=train_config['load_dataset_to_mem'],
-#     load_dataset_every_N_time=train_config['load_dataset_every_N_time'],
-#     capacity=train_config['capacity'],
-#     num_workers=train_config['num_load_dataset_workers'],
-#     preload_list=list(range(NUM_TEST_SAMPLE)))
+data_provider = DataProvider(fetch_data, batch_data,
+    load_dataset_to_mem=train_config['load_dataset_to_mem'],
+    load_dataset_every_N_time=train_config['load_dataset_every_N_time'],
+    capacity=train_config['capacity'],
+    num_workers=train_config['num_load_dataset_workers'],
+    preload_list=list(range(NUM_TEST_SAMPLE)))
 
 
 # Training session ==========================================================
@@ -682,8 +682,8 @@ batch_gradient_list = []
 with open('pointgnn_varlist.txt', 'r') as f:
     varlist = ast.literal_eval(f.read())
 
-# saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
-# saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
+saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
+saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
 
 init = tf.global_variables_initializer()
 with tf.Session(graph=graph,
@@ -691,11 +691,11 @@ with tf.Session(graph=graph,
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:
     print('before init')
     
-    # saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-1400000')
-    # saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
-    # sess.run(global_step.initializer)
+    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-1400000')
+    saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
+    sess.run(global_step.initializer)
     # sess.run(tf.variables_initializer(tf.global_variables()))
-    sess.run(init)
+    # sess.run(init)
     print("after init")
     states = tf.train.get_checkpoint_state(train_config['train_dir'])
     if states is not None:
@@ -714,9 +714,10 @@ with tf.Session(graph=graph,
         # =============== modify======================
         # generate key frame idx list
         frame_idx_list = np.random.permutation(NUM_TEST_SAMPLE // 2) * 2
+        print("len frame_idx_list: ", frame_idx_list)
         # =============== modify======================
         # default batch_size=1
-        for batch_idx in range(0, NUM_TEST_SAMPLE-2*2*batch_size, 2*batch_size):
+        for batch_idx in range(0, NUM_TEST_SAMPLE // 2, batch_size):
             mid_time = time.time()
             print("batch_idx: ", batch_idx)
             device_batch_size = batch_size//(COPY_PER_GPU*NUM_GPU)
@@ -727,16 +728,15 @@ with tf.Session(graph=graph,
                     gi*device_batch_size:batch_idx+(gi+1)*device_batch_size]
                 input_v, vertex_coord_list, keypoint_indices_list, edges_list, \
                 cls_labels, encoded_boxes, valid_boxes \
-                    = batch_data([fetch_data(idx) for idx in batch_frame_idx_list])
-                    # = data_provider.provide_batch(batch_frame_idx_list)
-
+                    = data_provider.provide_batch(batch_frame_idx_list)
+                # = batch_data([fetch_data(idx) for idx in batch_frame_idx_list])
                 # =============== modify======================
                 # batch_frame_idx_list contain 1 frame
                 batch_non_key_frame_list = [i + 1 for i in batch_frame_idx_list]
                 input_v1, vertex_coord_list1, keypoint_indices_list1, edges_list1, \
                 cls_labels1, encoded_boxes1, valid_boxes1 \
-                    = batch_data([fetch_data(idx) for idx in batch_non_key_frame_list])
-                    # = data_provider.provide_batch(batch_non_key_frame_list)
+                    = data_provider.provide_batch(batch_non_key_frame_list)
+                # = batch_data([fetch_data(idx) for idx in batch_non_key_frame_list])
                 # =============== modify======================
 
                 t_initial_vertex_features = \
