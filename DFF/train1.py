@@ -7,6 +7,7 @@ import sys
 import copy
 from sys import getsizeof
 from multiprocessing import Pool, Queue, Process
+import ast
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
@@ -102,9 +103,10 @@ def fetch_data(frame_idx):
         graph_generate_fn(cam_rgb_points.xyz, **config['graph_gen_kwargs'])
     if config['input_features'] == 'irgb':
         input_v = cam_rgb_points.attr
-    elif config['input_features'] == '0rgb':
-        input_v = np.hstack([np.zeros((cam_rgb_points.attr.shape[0], 1)),
-            cam_rgb_points.attr[:, 1:]])
+    elif config['input_features'] == 'rgb':
+        # input_v = np.hstack([np.zeros((cam_rgb_points.attr.shape[0], 1)),
+        #     cam_rgb_points.attr[:, 1:]])
+        input_v = cam_rgb_points.attr[:, 1:]
     elif config['input_features'] == '0000':
         input_v = np.zeros_like(cam_rgb_points.attr)
     elif config['input_features'] == 'i000':
@@ -537,7 +539,7 @@ metrics_update_ops.update(t_mAP_update_ops)
 metrics_update_ops.update(t_classwise_loc_loss_update_ops)
 
 # optimizers ================================================================
-global_step = tf.Variable(0, dtype=tf.int32, trainable=False, name="global_step")
+global_step = tf.Variable(0, dtype=tf.int32, trainable=False)
 t_learning_rate = tf.train.exponential_decay(train_config['initial_lr'],
     global_step, train_config['decay_step'], train_config['decay_factor'],
     staircase=train_config.get('is_staircase', True))
@@ -653,12 +655,12 @@ class DataProvider(object):
             batch_list.append(self.provide(frame_idx))
         return self._batch_data(batch_list)
 
-data_provider = DataProvider(fetch_data, batch_data,
-    load_dataset_to_mem=train_config['load_dataset_to_mem'],
-    load_dataset_every_N_time=train_config['load_dataset_every_N_time'],
-    capacity=train_config['capacity'],
-    num_workers=train_config['num_load_dataset_workers'],
-    preload_list=list(range(NUM_TEST_SAMPLE)))
+# data_provider = DataProvider(fetch_data, batch_data,
+#     load_dataset_to_mem=train_config['load_dataset_to_mem'],
+#     load_dataset_every_N_time=train_config['load_dataset_every_N_time'],
+#     capacity=train_config['capacity'],
+#     num_workers=train_config['num_load_dataset_workers'],
+#     preload_list=list(range(NUM_TEST_SAMPLE)))
 
 
 # Training session ==========================================================
@@ -677,13 +679,23 @@ else:
 batch_ctr = 0
 batch_gradient_list = []
 
-# init = tf.global_variables_initializer()
+with open('pointgnn_varlist.txt', 'r') as f:
+    varlist = ast.literal_eval(f.read())
+
+# saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
+# saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
+
+init = tf.global_variables_initializer()
 with tf.Session(graph=graph,
     config=tf.ConfigProto(
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:
     print('before init')
-    sess.run(tf.variables_initializer(tf.global_variables()))
-    # sess.run(init)
+    
+    # saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-1400000')
+    # saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
+    # sess.run(global_step.initializer)
+    # sess.run(tf.variables_initializer(tf.global_variables()))
+    sess.run(init)
     print("after init")
     states = tf.train.get_checkpoint_state(train_config['train_dir'])
     if states is not None:
@@ -693,7 +705,7 @@ with tf.Session(graph=graph,
     print("before previous_step")
     previous_step = sess.run(global_step)
     local_variables_initializer = tf.variables_initializer(tf.local_variables())
-    for epoch_idx in range((previous_step*batch_size)//NUM_TEST_SAMPLE,
+    for epoch_idx in range((previous_step*2*batch_size)//NUM_TEST_SAMPLE,
     train_config['max_epoch']):
         
         sess.run(local_variables_initializer)
@@ -701,10 +713,10 @@ with tf.Session(graph=graph,
         start_time = time.time()
         # =============== modify======================
         # generate key frame idx list
-        frame_idx_list = np.random.permutation(NUM_TEST_SAMPLE // 2 - 1) * 2
+        frame_idx_list = np.random.permutation(NUM_TEST_SAMPLE // 2) * 2
         # =============== modify======================
         # default batch_size=1
-        for batch_idx in range(0, NUM_TEST_SAMPLE-batch_size+1, batch_size):
+        for batch_idx in range(0, NUM_TEST_SAMPLE-2*2*batch_size, 2*batch_size):
             mid_time = time.time()
             print("batch_idx: ", batch_idx)
             device_batch_size = batch_size//(COPY_PER_GPU*NUM_GPU)
@@ -715,14 +727,16 @@ with tf.Session(graph=graph,
                     gi*device_batch_size:batch_idx+(gi+1)*device_batch_size]
                 input_v, vertex_coord_list, keypoint_indices_list, edges_list, \
                 cls_labels, encoded_boxes, valid_boxes \
-                    = data_provider.provide_batch(batch_frame_idx_list)
+                    = batch_data([fetch_data(idx) for idx in batch_frame_idx_list])
+                    # = data_provider.provide_batch(batch_frame_idx_list)
 
                 # =============== modify======================
                 # batch_frame_idx_list contain 1 frame
                 batch_non_key_frame_list = [i + 1 for i in batch_frame_idx_list]
                 input_v1, vertex_coord_list1, keypoint_indices_list1, edges_list1, \
                 cls_labels1, encoded_boxes1, valid_boxes1 \
-                    = data_provider.provide_batch(batch_non_key_frame_list)
+                    = batch_data([fetch_data(idx) for idx in batch_non_key_frame_list])
+                    # = data_provider.provide_batch(batch_non_key_frame_list)
                 # =============== modify======================
 
                 t_initial_vertex_features = \
