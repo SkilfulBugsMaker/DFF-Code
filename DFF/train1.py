@@ -21,7 +21,7 @@ from dataset.kitti_dataset import KittiDataset
 from models.graph_gen import get_graph_generate_fn
 from models.models import get_model
 
-from models.flownet3d import get_flownet3d_model, feature_flow
+from models.flownet3d import get_flownet3d_small_model, get_flownet3d_large_model, feature_flow
 
 
 from models.box_encoding import get_box_decoding_fn, get_box_encoding_fn,\
@@ -303,7 +303,7 @@ for gi in range(NUM_GPU):
             pc_key_feat = tf.expand_dims(t_initial_vertex_features, 0)
             print(pc_non_key_xyz, pc_non_key_feat, pc_key_feat)
             # [1, N_non_key ,3]
-            optical_flow_non_key_to_key = get_flownet3d_model(
+            optical_flow_non_key_to_key = get_flownet3d_small_model(
                 pc_non_key_xyz,
                 pc_non_key_feat,
                 pc_key_xyz,
