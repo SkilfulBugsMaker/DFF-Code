@@ -30,11 +30,13 @@ def feature_flow(xyz1, xyz2, flow_2_to_1, feature1, n_sample=4):
     xyz_2_in_1 = xyz2 + flow_2_to_1
     # idx=[batch_size, N2, n_sample]
     _, idx = knn_point(n_sample, xyz1, xyz_2_in_1)
-
+    print('idx: ', idx)
     # shape = [batch_size, N2, n_sample, c]
     warped_feature = tf.gather(feature1, idx[0], axis=1)
+    print(warped_feature)
     # shape = [batch_size, N2, c]
     warped_feature = tf.reduce_mean(warped_feature, axis=2)
+    print(warped_feature)
     return warped_feature
 
 
