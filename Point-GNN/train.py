@@ -90,9 +90,10 @@ def fetch_data(frame_idx):
         graph_generate_fn(cam_rgb_points.xyz, **config['graph_gen_kwargs'])
     if config['input_features'] == 'irgb':
         input_v = cam_rgb_points.attr
-    elif config['input_features'] == '0rgb':
-        input_v = np.hstack([np.zeros((cam_rgb_points.attr.shape[0], 1)),
-            cam_rgb_points.attr[:, 1:]])
+    elif config['input_features'] == 'rgb':
+        # input_v = np.hstack([np.zeros((cam_rgb_points.attr.shape[0], 1)),
+        #     cam_rgb_points.attr[:, 1:]])
+        input_v = cam_rgb_points.attr[:, 1:]
     elif config['input_features'] == '0000':
         input_v = np.zeros_like(cam_rgb_points.attr)
     elif config['input_features'] == 'i000':
@@ -505,6 +506,12 @@ else:
             per_process_gpu_memory_fraction=train_config['gpu_memusage'])
 batch_ctr = 0
 batch_gradient_list = []
+variables = tf.contrib.framework.get_variables_to_restore()
+v_name_list = []
+for v in variables:
+    v_name_list.append(v.name)
+with open('pointgnn_variable', 'w') as f:
+    f.write(str(v_name_list))
 with tf.Session(graph=graph,
     config=tf.ConfigProto(
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:

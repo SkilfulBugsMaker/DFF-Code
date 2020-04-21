@@ -147,6 +147,7 @@ class MultiLayerFastLocalGraphModelV2(object):
 
                         tfeatures_list.append(tfeatures)
                         print('Feature Dim:' + str(tfeatures.shape[-1]))
+                print("t_features", tfeatures.shape)
                 predictor_config = self._layer_configs[-1]
                 assert (predictor_config['type']=='classaware_predictor' or
                     predictor_config['type']=='classaware_predictor_128' or
