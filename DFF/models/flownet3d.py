@@ -19,6 +19,57 @@ from models.pointnet_util import *
 
 from tf_grouping import query_ball_point, group_point, knn_point
 
+def get_flowed_feature(
+        pc1_xyz, pc1_rgb, pc1_graph_point_xyz, pc1_graph_feat,
+        pc2_xyz, pc2_rgb, pc2_graph_point_xyz, pc2_graph_point_idx,
+        t_is_training
+):
+    # 1 key, 2 non key
+    pc_non_key_xyz = tf.expand_dims(pc2_xyz, 0)
+    pc_non_key_feat = tf.expand_dims(pc2_rgb, 0)
+    pc_key_xyz = tf.expand_dims(pc1_xyz, 0)
+    pc_key_feat = tf.expand_dims(pc1_rgb, 0)
+    print(pc_non_key_xyz, pc_non_key_feat, pc_key_feat)
+    # [1, N_non_key ,3]
+    optical_flow_non_key_to_key = get_flownet3d_small_model(
+        pc_non_key_xyz,
+        pc_non_key_feat,
+        pc_key_xyz,
+        pc_key_feat,
+        is_training=t_is_training)
+    print(optical_flow_non_key_to_key)
+    # down-sampling optical flow
+    # [1, N_non_key_graph, 1 ,3]
+    optical_flow_non_key_to_key_graph_points = tf.gather(
+        optical_flow_non_key_to_key, pc2_graph_point_idx, axis=1
+    )
+    print(optical_flow_non_key_to_key_graph_points)
+    # [1, N_non_key_graph ,3]
+    optical_flow_non_key_to_key_graph_points = tf.squeeze(
+        optical_flow_non_key_to_key_graph_points, axis=2
+    )
+    print(optical_flow_non_key_to_key_graph_points)
+    # key frame graph point xyz
+    # [1, N_key_graph ,3]
+    xyz = tf.expand_dims(pc1_graph_point_xyz, 0)
+    print('xyz: ', xyz)
+    # non key frame graph point xyz
+    # [1, N_non_key_graph, 3]
+    xyz1 = tf.expand_dims(pc2_graph_point_xyz, 0)
+    print('xyz1: ', xyz1)
+    # [1, N_pc_non_key_graph, 300]
+    t_features1 = feature_flow(
+        xyz,
+        xyz1,
+        optical_flow_non_key_to_key_graph_points,
+        tf.expand_dims(pc1_graph_feat, 0),
+        n_sample=4
+    )
+    # [N_pc_non_key_graph, 300]
+    t_features1 = tf.squeeze(t_features1, axis=0)
+    return t_features1
+
+
 def feature_flow(xyz1, xyz2, flow_2_to_1, feature1, n_sample=4):
     '''
     :param xyz1: [batch_size, N1, 3]

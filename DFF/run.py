@@ -17,6 +17,7 @@ from models.graph_gen import get_graph_generate_fn
 from models.models import get_model
 from models.box_encoding import get_box_decoding_fn, get_box_encoding_fn, \
                           get_encoding_len
+from models.flownet3d import get_flowed_feature
 from models import preprocess
 from models import nms
 from util.config_util import load_config, load_train_config
@@ -135,13 +136,35 @@ for _ in range(len(config['runtime_graph_gen_kwargs']['level_configs'])):
 t_is_training = tf.placeholder(dtype=tf.bool, shape=[])
 t_is_keyframe = tf.placeholder(dtype=tf.bool, shape=[])
 
+# key frame not use
+t_key_pc_xyz = tf.placeholder(dtype=tf.float32, shape=[None, 3])
+t_key_pc_rgb = tf.placeholder(dtype=tf.float32, shape=[None, 3])
+t_key_graph_features = tf.placeholder(dtype=tf.float32, shape=[None, None])
+# =======================
+
 model = get_model(config['model_name'])(num_classes=NUM_CLASSES,
     box_encoding_len=BOX_ENCODING_LEN, mode='test', **config['model_kwargs'])
 
-t_features = model.extract_features(
-    t_initial_vertex_features, t_vertex_coord_list, t_keypoint_indices_list,
-    t_edges_list,
-    t_is_training)
+t_features = tf.cond(
+    t_is_keyframe,
+    lambda : model.extract_features(
+        t_initial_vertex_features,
+        t_vertex_coord_list,
+        t_keypoint_indices_list,
+        t_edges_list,
+        t_is_training
+    ),
+    lambda : get_flowed_feature(
+        t_key_pc_xyz,
+        t_key_pc_rgb,
+        t_key_graph_features,
+        t_vertex_coord_list[0],     # pc2_xyz
+        t_initial_vertex_features,  # pc2_rgb
+        t_vertex_coord_list[-1],    # pc2_graph_point_xyz
+        t_keypoint_indices_list[-1],    # pc2_graph_point_idx
+        t_is_training
+    )
+)
 t_logits, t_pred_box = model.predict(t_features, t_is_training)
 
 t_probs = model.postprocess(t_logits)
@@ -149,12 +172,19 @@ t_predictions = tf.argmax(t_probs, axis=1, output_type=tf.int32)
 # optimizers ==================================================================
 global_step = tf.Variable(0, dtype=tf.int32, trainable=False)
 
-fetches = {
+fetches_key = {
+    'step': global_step,
+    'predictions': t_predictions,
+    'probs': t_probs,
+    'key_graph_features': t_features,
+    'pred_box': t_pred_box
+}
+fetches_non_key = {
     'step': global_step,
     'predictions': t_predictions,
     'probs': t_probs,
     'pred_box': t_pred_box
-    }
+}
 # setup Visualizer ============================================================
 if VISUALIZATION_LEVEL == 1:
     print("Configure the viewpoint as you want and press [q]")
@@ -207,6 +237,12 @@ with tf.Session(graph=graph,
     print('Restore from checkpoint %s' % model_path)
     saver.restore(sess, model_path)
     previous_step = sess.run(global_step)
+    key_frame_info = {
+        "key_pc_xyz": None,
+        "key_pc_rgb": None,
+        "key_graph_features": None
+    }
+    KEY_FRAME_STEP = 3
     for frame_idx in tqdm(range(0, NUM_TEST_SAMPLE)):
         start_time = time.time()
         if VISUALIZATION_LEVEL == 2:
@@ -232,9 +268,10 @@ with tf.Session(graph=graph,
             + graph_time - input_time
         if config['input_features'] == 'irgb':
             input_v = cam_rgb_points.attr
-        elif config['input_features'] == '0rgb':
-            input_v = np.hstack([np.zeros((cam_rgb_points.attr.shape[0], 1)),
-                cam_rgb_points.attr[:, 1:]])
+        elif config['input_features'] == 'rgb':
+            # input_v = np.hstack([np.zeros((cam_rgb_points.attr.shape[0], 1)),
+            #     cam_rgb_points.attr[:, 1:]])
+            input_v = cam_rgb_points.attr[:, 1:]
         elif config['input_features'] == '0000':
             input_v = np.zeros_like(cam_rgb_points.attr)
         elif config['input_features'] == 'i000':
@@ -256,15 +293,41 @@ with tf.Session(graph=graph,
             label_map = {'Background': 0, 'Pedestrian': 1, 'Cyclist':3,
                 'DontCare': 5}
         # run forwarding =====================================================
-        feed_dict = {
-            t_initial_vertex_features: input_v,
-            t_is_training: True,
-        }
-        feed_dict.update(dict(zip(t_edges_list, edges_list)))
-        feed_dict.update(
-            dict(zip(t_keypoint_indices_list, keypoint_indices_list)))
-        feed_dict.update(dict(zip(t_vertex_coord_list, vertex_coord_list)))
-        results = sess.run(fetches, feed_dict=feed_dict)
+        if frame_idx % KEY_FRAME_STEP == 0:
+            # key frame
+            feed_dict = {
+                t_initial_vertex_features: input_v,
+                t_is_training: False,
+                t_is_keyframe: True,
+                t_key_pc_xyz: np.zeros([10, 3]),
+                t_key_pc_rgb: np.zeros([10, 3]),
+                t_key_graph_features: np.zeros([10, 300])
+            }
+            feed_dict.update(dict(zip(t_edges_list, edges_list)))
+            feed_dict.update(
+                dict(zip(t_keypoint_indices_list, keypoint_indices_list)))
+            feed_dict.update(dict(zip(t_vertex_coord_list, vertex_coord_list)))
+            results = sess.run(fetches_key, feed_dict=feed_dict)
+            key_frame_info["key_pc_xyz"] = vertex_coord_list[0]
+            key_frame_info["key_pc_rgb"] = t_initial_vertex_features
+            key_frame_info["key_graph_features"] = results["key_graph_features"]
+
+        else:
+            # non key frame
+            feed_dict = {
+                t_initial_vertex_features: input_v,
+                t_is_training: False,
+                t_is_keyframe: True,
+                t_key_pc_xyz: key_frame_info["key_pc_xyz"],
+                t_key_pc_rgb: key_frame_info["key_pc_rgb"],
+                t_key_graph_features: key_frame_info["key_graph_features"]
+            }
+            feed_dict.update(dict(zip(t_edges_list, edges_list)))
+            feed_dict.update(
+                dict(zip(t_keypoint_indices_list, keypoint_indices_list)))
+            feed_dict.update(dict(zip(t_vertex_coord_list, vertex_coord_list)))
+            results = sess.run(fetches_non_key, feed_dict=feed_dict)
+
         gnn_time = time.time()
         time_dict['gnn inference'] = time_dict.get('gnn inference', 0) \
             + gnn_time - graph_time
