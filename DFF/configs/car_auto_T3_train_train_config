@@ -48,7 +48,7 @@
     "decay_factor": 0.1,
     "decay_step": 400000,
     "gpu_memusage": -1,
-    "initial_lr": 0.125,
+    "initial_lr": 0.5,
     "load_dataset_every_N_time": 0,
     "load_dataset_to_mem": true,
     "max_epoch": 1718,

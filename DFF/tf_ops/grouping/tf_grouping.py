@@ -56,12 +56,16 @@ def knn_point(k, xyz1, xyz2):
         idx: (batch_size, npoint, k) int32 array, indices to input points
     '''
     b = xyz1.get_shape()[0].value
-    n = xyz1.get_shape()[1].value
+    n = tf.shape(xyz1)[1]
+    # n = xyz1.get_shape()[1].value
     c = xyz1.get_shape()[2].value
-    m = xyz2.get_shape()[1].value
-
+    m = tf.shape(xyz2)[1]
+    # m = xyz2.get_shape()[1].value
+    
     xyz1 = tf.tile(tf.reshape(xyz1, (b,1,n,c)), [1,m,1,1])
+    # xyz1 = tf.tile(tf.reshape(xyz1, (b,1,-1,c)), [1,-1,1,1])
     xyz2 = tf.tile(tf.reshape(xyz2, (b,m,1,c)), [1,1,n,1])
+    # xyz2 = tf.tile(tf.reshape(xyz2, (b,-1,1,c)), [1,1,-1,1])
     dist = tf.reduce_sum((xyz1-xyz2)**2, -1)
 
     outi, out = select_top_k(k, dist)

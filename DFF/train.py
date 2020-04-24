@@ -228,13 +228,13 @@ for gi in range(NUM_GPU):
             model = get_model(config['model_name'])(num_classes=NUM_CLASSES,
                 box_encoding_len=BOX_ENCODING_LEN, mode='train',
                 **config['model_kwargs'])
-            t_features, t_logits, t_pred_box = model.predict(
-                t_initial_vertex_features, t_vertex_coord_list,
-                t_keypoint_indices_list, t_edges_list, t_is_training)
-            # t_features = model.extract_features(
+            # t_features, t_logits, t_pred_box = model.predict(
             #     t_initial_vertex_features, t_vertex_coord_list,
             #     t_keypoint_indices_list, t_edges_list, t_is_training)
-            # t_logits, t_pred_box = model.predict(t_features, t_is_training)
+            t_features = model.extract_features(
+                t_initial_vertex_features, t_vertex_coord_list,
+                t_keypoint_indices_list, t_edges_list, t_is_training)
+            t_logits, t_pred_box = model.predict(t_features, t_is_training)
             t_probs = model.postprocess(t_logits)
             t_predictions = tf.argmax(t_probs, axis=-1, output_type=tf.int32)
             t_loss_dict = model.loss(t_logits, t_class_labels, t_pred_box,
@@ -518,6 +518,9 @@ else:
             per_process_gpu_memory_fraction=train_config['gpu_memusage'])
 batch_ctr = 0
 batch_gradient_list = []
+variables = tf.contrib.framework.get_variables_to_restore()
+for v in variables:
+    print(v.name)
 with tf.Session(graph=graph,
     config=tf.ConfigProto(
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:
