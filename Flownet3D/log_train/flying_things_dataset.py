@@ -12,7 +12,7 @@ import glob
 
 
 class SceneflowDataset():
-    def __init__(self, root='data_preprocessing/data_processed_maxcut_35_both_mask_20k_2k', npoints=2048, train=True):
+    def __init__(self, root='data_processed_maxcut_35_both_mask_20k_2k', npoints=2048, train=True):
         self.npoints = npoints
         self.train = train
         self.root = root

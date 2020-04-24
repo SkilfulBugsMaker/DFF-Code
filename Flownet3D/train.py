@@ -128,6 +128,9 @@ def train():
         config.gpu_options.allow_growth = True
         config.allow_soft_placement = True
         config.log_device_placement = False
+        variables = tf.contrib.framework.get_variables_to_restore()
+        for v in variables:
+            print(v.name)
         sess = tf.Session(config=config)
 
         # Add summary writers

@@ -134,8 +134,10 @@ def fetch_data(frame_idx):
         cls_labels, encoded_boxes, valid_boxes)
 
 def batch_data(batch_list):
+    # 两帧的7个信息
     N_input_v, N_vertex_coord_list, N_keypoint_indices_list, N_edges_list,\
     N_cls_labels, N_encoded_boxes, N_valid_boxes = zip(*batch_list)
+    # 2
     batch_size = len(batch_list)
     level_num = len(N_vertex_coord_list[0])
     batched_keypoint_indices_list = []

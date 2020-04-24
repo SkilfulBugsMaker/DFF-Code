@@ -31,7 +31,7 @@ parser.add_argument('--decay_step', type=int, default=200000, help='Decay step f
 parser.add_argument('--decay_rate', type=float, default=0.7, help='Decay rate for lr decay [default: 0.7]')
 FLAGS = parser.parse_args()
 
-os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
+# os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
 
 EPOCH_CNT = 0
 
@@ -63,7 +63,9 @@ BN_DECAY_CLIP = 0.99
 
 TRAIN_DATASET = flying_things_dataset.SceneflowDataset(DATA, npoints=NUM_POINT)
 TEST_DATASET = flying_things_dataset.SceneflowDataset(DATA, npoints=NUM_POINT, train=False)
-
+print(FLAGS)
+print(len(TRAIN_DATASET))
+print(len(TEST_DATASET))
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
     LOG_FOUT.flush()
@@ -126,6 +128,9 @@ def train():
         config.gpu_options.allow_growth = True
         config.allow_soft_placement = True
         config.log_device_placement = False
+        variables = tf.contrib.framework.get_variables_to_restore()
+        for v in variables:
+            print(v.name)
         sess = tf.Session(config=config)
 
         # Add summary writers
