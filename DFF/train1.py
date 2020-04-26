@@ -67,7 +67,7 @@ dataset = KittiDataset(
     os.path.join(DATASET_DIR, 'velodyne/training/velodyne/'),
     os.path.join(DATASET_DIR, 'calib/training/calib/'),
     os.path.join(DATASET_DIR, 'labels/training/label_2'),
-    DATASET_SPLIT_FILE,
+    # DATASET_SPLIT_FILE,
     num_classes=config['num_classes'])
 NUM_CLASSES = dataset.num_classes
 
@@ -579,7 +579,15 @@ train_op = optimizer.apply_gradients(grads_cross_gpu, global_step=global_step)
 fetches = {
     'train_op': train_op,
     'step': global_step,
-    'learning_rate': t_learning_rate
+    'learning_rate': t_learning_rate,
+    'clsloss': input_tensor_sets[0]['t_cls_loss'],
+    'regloss': input_tensor_sets[0]['t_reg_loss'],
+    'locloss': input_tensor_sets[0]['t_loc_loss'],
+    'clsloss1': input_tensor_sets[0]['t_cls_loss1'],
+    'regloss1': input_tensor_sets[0]['t_reg_loss1'],
+    'locloss1': input_tensor_sets[0]['t_loc_loss1'],
+    'features': t_features,
+    'features1': t_features1
 }
 fetches.update(metrics_update_ops)
 
@@ -681,8 +689,13 @@ batch_gradient_list = []
 
 with open('pointgnn_varlist.txt', 'r') as f:
     varlist = ast.literal_eval(f.read())
+print(len([v for v in variables if v.name in varlist and v.name != 'Variable:0']))
+print(len([v for v in variables if v.name not in varlist]))
+print(len(variables))
 
-saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
+saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist])
+
+# saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
 saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
 
 init = tf.global_variables_initializer()
@@ -690,8 +703,8 @@ with tf.Session(graph=graph,
     config=tf.ConfigProto(
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:
     print('before init')
-    
-    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-1400000')
+    sess.run(init)
+    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-766940')
     saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
     sess.run(global_step.initializer)
     # sess.run(tf.variables_initializer(tf.global_variables()))
@@ -750,6 +763,17 @@ with tf.Session(graph=graph,
                     input_tensor_sets[gi]['t_keypoint_indices_list']
                 t_vertex_coord_list = \
                     input_tensor_sets[gi]['t_vertex_coord_list']
+                
+                t_initial_vertex_features1 = \
+                    input_tensor_sets[gi]['t_initial_vertex_features1']
+                t_class_labels1 = input_tensor_sets[gi]['t_class_labels1']
+                t_encoded_gt_boxes1 = input_tensor_sets[gi]['t_encoded_gt_boxes1']
+                t_valid_gt_boxes1 = input_tensor_sets[gi]['t_valid_gt_boxes1']
+                t_edges_list1 = input_tensor_sets[gi]['t_edges_list1']
+                t_keypoint_indices_list1 = \
+                    input_tensor_sets[gi]['t_keypoint_indices_list1']
+                t_vertex_coord_list1 = \
+                    input_tensor_sets[gi]['t_vertex_coord_list1']
                 feed_dict = {
                     t_initial_vertex_features: input_v,
                     t_class_labels: cls_labels,
@@ -796,7 +820,9 @@ with tf.Session(graph=graph,
                 batch_ctr += 1
             else:
                 results = sess.run(fetches, feed_dict=total_feed_dict)
-
+            print('features: ',results['features'])
+            print('features1: ',results['features1'])
+            # print('cls:%f, loc:%f, reg:%f, cls1:%f, loc1:%f, reg1:%f, total_loss: %f' % (results['clsloss'], results['locloss'], results['regloss'], results['clsloss1'], results['locloss1'], results['regloss1'], results['total_loss']))
             if 'max_steps' in train_config and train_config['max_steps'] > 0:
                 if results['step'] >= train_config['max_steps']:
                     checkpoint_path = os.path.join(train_config['train_dir'],

@@ -305,7 +305,9 @@ class MultiLayerFastLocalGraphModelV2(object):
         False)]):
             reg_loss = tf.reduce_sum(tf.losses.get_regularization_losses())
         loss_dict.update({'cls_loss': cls_loss, 'loc_loss': loc_loss,
-            'reg_loss': reg_loss, 'num_endpoint': num_endpoint,
+            # 'reg_loss':tf.constant(0, dtype=tf.float32) ,
+            'reg_loss': reg_loss, 
+            'num_endpoint': num_endpoint,
             'num_valid_endpoint':num_valid_endpoint})
         return loss_dict
 

@@ -82,7 +82,7 @@ else:
         os.path.join(DATASET_DIR, 'velodyne/training/velodyne/'),
         os.path.join(DATASET_DIR, 'calib/training/calib/'),
         os.path.join(DATASET_DIR, 'labels/training/label_2'),
-        DATASET_SPLIT_FILE,
+        # DATASET_SPLIT_FILE,
         num_classes=config['num_classes'])
 NUM_TEST_SAMPLE = dataset.num_files
 NUM_CLASSES = dataset.num_classes
@@ -139,7 +139,8 @@ t_is_keyframe = tf.placeholder(dtype=tf.bool, shape=[])
 # key frame not use
 t_key_pc_xyz = tf.placeholder(dtype=tf.float32, shape=[None, 3])
 t_key_pc_rgb = tf.placeholder(dtype=tf.float32, shape=[None, 3])
-t_key_graph_features = tf.placeholder(dtype=tf.float32, shape=[None, None])
+t_key_graph_xyz = tf.placeholder(dtype=tf.float32, shape=[None, 3])
+t_key_graph_features = tf.placeholder(dtype=tf.float32, shape=[None, 300])
 # =======================
 
 model = get_model(config['model_name'])(num_classes=NUM_CLASSES,
@@ -157,6 +158,7 @@ t_features = tf.cond(
     lambda : get_flowed_feature(
         t_key_pc_xyz,
         t_key_pc_rgb,
+        t_key_graph_xyz,
         t_key_graph_features,
         t_vertex_coord_list[0],     # pc2_xyz
         t_initial_vertex_features,  # pc2_rgb
@@ -240,7 +242,8 @@ with tf.Session(graph=graph,
     key_frame_info = {
         "key_pc_xyz": None,
         "key_pc_rgb": None,
-        "key_graph_features": None
+        "key_graph_features": None,
+        "key_graph_xyz": None
     }
     KEY_FRAME_STEP = 3
     for frame_idx in tqdm(range(0, NUM_TEST_SAMPLE)):
@@ -301,6 +304,7 @@ with tf.Session(graph=graph,
                 t_is_keyframe: True,
                 t_key_pc_xyz: np.zeros([10, 3]),
                 t_key_pc_rgb: np.zeros([10, 3]),
+                t_key_graph_xyz: np.zeros([10,3]),
                 t_key_graph_features: np.zeros([10, 300])
             }
             feed_dict.update(dict(zip(t_edges_list, edges_list)))
@@ -309,17 +313,18 @@ with tf.Session(graph=graph,
             feed_dict.update(dict(zip(t_vertex_coord_list, vertex_coord_list)))
             results = sess.run(fetches_key, feed_dict=feed_dict)
             key_frame_info["key_pc_xyz"] = vertex_coord_list[0]
-            key_frame_info["key_pc_rgb"] = t_initial_vertex_features
+            key_frame_info["key_pc_rgb"] = input_v
             key_frame_info["key_graph_features"] = results["key_graph_features"]
-
+            key_frame_info["key_graph_xyz"] = vertex_coord_list[-1]
         else:
             # non key frame
             feed_dict = {
                 t_initial_vertex_features: input_v,
                 t_is_training: False,
-                t_is_keyframe: True,
+                t_is_keyframe: False,
                 t_key_pc_xyz: key_frame_info["key_pc_xyz"],
                 t_key_pc_rgb: key_frame_info["key_pc_rgb"],
+                t_key_graph_xyz: key_frame_info["key_graph_xyz"],
                 t_key_graph_features: key_frame_info["key_graph_features"]
             }
             feed_dict.update(dict(zip(t_edges_list, edges_list)))
@@ -327,7 +332,7 @@ with tf.Session(graph=graph,
                 dict(zip(t_keypoint_indices_list, keypoint_indices_list)))
             feed_dict.update(dict(zip(t_vertex_coord_list, vertex_coord_list)))
             results = sess.run(fetches_non_key, feed_dict=feed_dict)
-
+        print(results)
         gnn_time = time.time()
         time_dict['gnn inference'] = time_dict.get('gnn inference', 0) \
             + gnn_time - graph_time
