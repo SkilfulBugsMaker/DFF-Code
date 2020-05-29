@@ -13,6 +13,7 @@ import tensorflow as tf
 from dataset.kitti_dataset import KittiDataset
 from models.graph_gen import get_graph_generate_fn
 from models.models import get_model
+from models.models2 import get_model as get_model2
 from models.box_encoding import get_box_decoding_fn, get_box_encoding_fn,\
     get_encoding_len
 from models.crop_aug import CropAugSampler
@@ -54,7 +55,7 @@ dataset = KittiDataset(
     os.path.join(DATASET_DIR, 'velodyne/training/velodyne/'),
     os.path.join(DATASET_DIR, 'calib/training/calib/'),
     os.path.join(DATASET_DIR, 'labels/training/label_2'),
-    DATASET_SPLIT_FILE,
+    # DATASET_SPLIT_FILE,
     num_classes=config['num_classes'])
 NUM_CLASSES = dataset.num_classes
 
@@ -90,9 +91,8 @@ def fetch_data(frame_idx):
         graph_generate_fn(cam_rgb_points.xyz, **config['graph_gen_kwargs'])
     if config['input_features'] == 'irgb':
         input_v = cam_rgb_points.attr
-    elif config['input_features'] == '0rgb':
-        input_v = np.hstack([np.zeros((cam_rgb_points.attr.shape[0], 1)),
-            cam_rgb_points.attr[:, 1:]])
+    elif config['input_features'] == 'rgb':
+        input_v = cam_rgb_points.attr[:, 1:]
     elif config['input_features'] == '0000':
         input_v = np.zeros_like(cam_rgb_points.attr)
     elif config['input_features'] == 'i000':
@@ -234,6 +234,7 @@ for gi in range(NUM_GPU):
             t_features = model.extract_features(
                 t_initial_vertex_features, t_vertex_coord_list,
                 t_keypoint_indices_list, t_edges_list, t_is_training)
+            # t_featuresp = tf.Print(t_features, [t_features], "t_features: ")
             t_logits, t_pred_box = model.predict(t_features, t_is_training)
             t_probs = model.postprocess(t_logits)
             t_predictions = tf.argmax(t_probs, axis=-1, output_type=tf.int32)
@@ -543,14 +544,12 @@ with tf.Session(graph=graph,
         frame_idx_list = np.random.permutation(NUM_TEST_SAMPLE)
         for batch_idx in range(0, NUM_TEST_SAMPLE-batch_size+1, batch_size):
             mid_time = time.time()
-            print("batch_idx: ", batch_idx)
             device_batch_size = batch_size//(COPY_PER_GPU*NUM_GPU)
             total_feed_dict = {}
             for gi in range(COPY_PER_GPU*NUM_GPU):
                 batch_frame_idx_list = frame_idx_list[
                     batch_idx+\
                     gi*device_batch_size:batch_idx+(gi+1)*device_batch_size]
-                print("batch_frame_idx_list", batch_frame_idx_list, batch_frame_idx_list[0])
                 input_v, vertex_coord_list, keypoint_indices_list, edges_list, \
                 cls_labels, encoded_boxes, valid_boxes \
                     = data_provider.provide_batch(batch_frame_idx_list)
@@ -597,12 +596,6 @@ with tf.Session(graph=graph,
                 batch_ctr += 1
             else:
                 results = sess.run(fetches, feed_dict=total_feed_dict)
-            print('len vertex_coord_list: ', len(vertex_coord_list), len(vertex_coord_list[0]), vertex_coord_list[0][0])
-            print('len keypoint_indices_list: ', len(keypoint_indices_list), keypoint_indices_list[0].shape)
-            print("vertex_coord_list.shape: ", vertex_coord_list[0].shape,vertex_coord_list[1].shape, vertex_coord_list[2].shape)
-            print('input_v,shape: ', input_v.shape)
-            # print('tfeatures_shape: ', results['t_features_shape'])
-            # print('t_vertex_coord_list_shape: ', results['t_vertex_coord_list_shape'])
             if 'max_steps' in train_config and train_config['max_steps'] > 0:
                 if results['step'] >= train_config['max_steps']:
                     checkpoint_path = os.path.join(train_config['train_dir'],

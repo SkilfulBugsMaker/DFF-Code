@@ -294,7 +294,6 @@ for gi in range(NUM_GPU):
             t_features = model.extract_features(
                 t_initial_vertex_features, t_vertex_coord_list,
                 t_keypoint_indices_list, t_edges_list, t_is_training)
-
             # ======================= modify below =======================
             # predict non-key frame to key frame optical flow, 几万点
             pc_non_key_xyz = tf.expand_dims(t_vertex_coord_list1[0], 0)
@@ -313,7 +312,7 @@ for gi in range(NUM_GPU):
             # down-sampling optical flow
             # [1, N_non_key_graph, 1 ,3]
             optical_flow_non_key_to_key_graph_points = tf.gather(
-                optical_flow_non_key_to_key, t_keypoint_indices_list1[-1], axis=1
+                optical_flow_non_key_to_key, t_keypoint_indices_list1[1], axis=1
             )
             print(optical_flow_non_key_to_key_graph_points)
             # [1, N_non_key_graph ,3]
@@ -323,11 +322,11 @@ for gi in range(NUM_GPU):
             print(optical_flow_non_key_to_key_graph_points)
             # key frame graph point xyz
             # [1, N_key_graph ,3]
-            xyz = tf.expand_dims(t_vertex_coord_list[-1], 0)
+            xyz = tf.expand_dims(t_vertex_coord_list[1], 0)
             print('xyz: ', xyz)
             # non key frame graph point xyz
             # [1, N_non_key_graph, 3]
-            xyz1 = tf.expand_dims(t_vertex_coord_list1[-1], 0)
+            xyz1 = tf.expand_dims(t_vertex_coord_list1[1], 0)
             print('xyz1: ', xyz1)
             # [1, N_pc_non_key_graph, 300]
             t_features1 = feature_flow(
@@ -368,11 +367,9 @@ for gi in range(NUM_GPU):
             t_num_valid_endpoint1 = t_loss_dict1['num_valid_endpoint']
             t_classwise_loc_loss1 = t_loss_dict1['classwise_loc_loss']
             # ==================== modify above ===================
-
-            t_total_loss = (t_cls_loss + t_cls_loss1) / 2 + \
-                           (t_loc_loss + t_loc_loss1) / 2 + \
-                           (t_reg_loss + t_reg_loss1) / 2
-
+            t_total_loss0 = t_cls_loss + t_loc_loss + t_reg_loss
+            t_total_loss1 = t_cls_loss1 + t_loc_loss1 + t_reg_loss1
+            t_total_loss = (t_total_loss0 + t_total_loss1) / 2
             input_tensor_sets.append(
                 {
                     't_initial_vertex_features': t_initial_vertex_features,
@@ -420,11 +417,12 @@ for gi in range(NUM_GPU):
                     't_num_endpoint1': t_num_endpoint1,
                     't_num_valid_endpoint1': t_num_valid_endpoint1,
                     't_classwise_loc_loss1': t_classwise_loc_loss1,
-
+                    't_total_loss0': t_total_loss0,
+                    't_total_loss1': t_total_loss1,
                     't_total_loss': t_total_loss
                  })
 
-if 'unify_copies' in train_config:
+if 'unify_copies' not in train_config:
     if train_config['unify_copies']:
         # re-weight loss for the number of end points
         print('Set to unify copies in different GPU as if its a single copy')
@@ -451,13 +449,13 @@ if 'unify_copies' in train_config:
                 +input_tensor_sets[ti]['t_reg_loss']
 
 t_cls_loss_cross_gpu = tf.reduce_mean(
-    [t['t_cls_loss'] for t in input_tensor_sets] + [t['t_cls_loss1'] for t in input_tensor_sets]
+    [t['t_cls_loss'] for t in input_tensor_sets]
 )
 t_loc_loss_cross_gpu = tf.reduce_mean(
-    [t['t_loc_loss'] for t in input_tensor_sets] + [t['t_loc_loss1'] for t in input_tensor_sets]
+    [t['t_loc_loss'] for t in input_tensor_sets]
 )
 t_reg_loss_cross_gpu = tf.reduce_mean(
-    [t['t_reg_loss'] for t in input_tensor_sets] + [t['t_reg_loss1'] for t in input_tensor_sets]
+    [t['t_reg_loss'] for t in input_tensor_sets]
 )
 t_total_loss_cross_gpu = tf.reduce_mean(
     [t['t_total_loss'] for t in input_tensor_sets]
@@ -580,14 +578,18 @@ fetches = {
     'train_op': train_op,
     'step': global_step,
     'learning_rate': t_learning_rate,
-    'clsloss': input_tensor_sets[0]['t_cls_loss'],
-    'regloss': input_tensor_sets[0]['t_reg_loss'],
-    'locloss': input_tensor_sets[0]['t_loc_loss'],
-    'clsloss1': input_tensor_sets[0]['t_cls_loss1'],
-    'regloss1': input_tensor_sets[0]['t_reg_loss1'],
-    'locloss1': input_tensor_sets[0]['t_loc_loss1'],
-    'features': t_features,
-    'features1': t_features1
+    'loss0': input_tensor_sets[0]['t_total_loss0'],
+    'loss1': input_tensor_sets[0]['t_total_loss1']
+    # 't_features_list': input_tensor_sets[0]['t_features_list'],
+    # 't_initial_vertex_features': input_tensor_sets[0]['t_initial_vertex_features']
+    # 'clsloss': input_tensor_sets[0]['t_cls_loss'],
+    # 'regloss': input_tensor_sets[0]['t_reg_loss'],
+    # 'locloss': input_tensor_sets[0]['t_loc_loss'],
+    # 'clsloss1': input_tensor_sets[0]['t_cls_loss1'],
+    # 'regloss1': input_tensor_sets[0]['t_reg_loss1'],
+    # 'locloss1': input_tensor_sets[0]['t_loc_loss1'],
+    # 'features': t_features,
+    # 'features1': t_features1
 }
 fetches.update(metrics_update_ops)
 
@@ -689,11 +691,13 @@ batch_gradient_list = []
 
 with open('pointgnn_varlist.txt', 'r') as f:
     varlist = ast.literal_eval(f.read())
+
+print(1111111111111111111)
 print(len([v for v in variables if v.name in varlist and v.name != 'Variable:0']))
 print(len([v for v in variables if v.name not in varlist]))
 print(len(variables))
 
-saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist])
+saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
 
 # saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
 saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
@@ -703,19 +707,13 @@ with tf.Session(graph=graph,
     config=tf.ConfigProto(
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:
     print('before init')
-    sess.run(init)
-    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-766940')
+    # sess.run(init)
+    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-1400000')
     saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
     sess.run(global_step.initializer)
     # sess.run(tf.variables_initializer(tf.global_variables()))
     # sess.run(init)
     print("after init")
-    states = tf.train.get_checkpoint_state(train_config['train_dir'])
-    if states is not None:
-        print('Restore from checkpoint %s' % states.model_checkpoint_path)
-        saver.restore(sess, states.model_checkpoint_path)
-        saver.recover_last_checkpoints(states.all_model_checkpoint_paths)
-    print("before previous_step")
     previous_step = sess.run(global_step)
     local_variables_initializer = tf.variables_initializer(tf.local_variables())
     for epoch_idx in range((previous_step*2*batch_size)//NUM_TEST_SAMPLE,
@@ -727,12 +725,12 @@ with tf.Session(graph=graph,
         # =============== modify======================
         # generate key frame idx list
         frame_idx_list = np.random.permutation(NUM_TEST_SAMPLE // 2) * 2
-        print("len frame_idx_list: ", frame_idx_list)
+        # print("len frame_idx_list: ", frame_idx_list)
         # =============== modify======================
         # default batch_size=1
         for batch_idx in range(0, NUM_TEST_SAMPLE // 2, batch_size):
             mid_time = time.time()
-            print("batch_idx: ", batch_idx)
+            # print("batch_idx: ", batch_idx)
             device_batch_size = batch_size//(COPY_PER_GPU*NUM_GPU)
             total_feed_dict = {}
             for gi in range(COPY_PER_GPU*NUM_GPU):
@@ -751,7 +749,7 @@ with tf.Session(graph=graph,
                     = data_provider.provide_batch(batch_non_key_frame_list)
                 # = batch_data([fetch_data(idx) for idx in batch_non_key_frame_list])
                 # =============== modify======================
-
+                # print('111111', len(keypoint_indices_list), len(keypoint_indices_list[0]), len(keypoint_indices_list[1]), len(vertex_coord_list), len(vertex_coord_list[0]))
                 t_initial_vertex_features = \
                     input_tensor_sets[gi]['t_initial_vertex_features']
                 t_class_labels = input_tensor_sets[gi]['t_class_labels']
@@ -802,6 +800,7 @@ with tf.Session(graph=graph,
                 total_feed_dict.update(feed_dict)
 
             if train_config.get('is_pseudo_batch', False):
+                print(1)
                 tf_gradient = [g for g, v in grads_cross_gpu]
                 batch_gradient = sess.run(tf_gradient,
                     feed_dict=total_feed_dict)
@@ -820,8 +819,10 @@ with tf.Session(graph=graph,
                 batch_ctr += 1
             else:
                 results = sess.run(fetches, feed_dict=total_feed_dict)
-            print('features: ',results['features'])
-            print('features1: ',results['features1'])
+            print('loss0: %f, loss1: %f' % (results['loss0'], results['loss1']))
+            # print("t_initial_vertex_features", results['t_features_list'])
+            # print('features: ',results['features'])
+            # print('features1: ',results['features1'])
             # print('cls:%f, loc:%f, reg:%f, cls1:%f, loc1:%f, reg1:%f, total_loss: %f' % (results['clsloss'], results['locloss'], results['regloss'], results['clsloss1'], results['locloss1'], results['regloss1'], results['total_loss']))
             if 'max_steps' in train_config and train_config['max_steps'] > 0:
                 if results['step'] >= train_config['max_steps']:
@@ -839,6 +840,7 @@ with tf.Session(graph=graph,
                     save_config(config_path, config_complete)
                     save_train_config(train_config_path, train_config)
                     raise SystemExit
+        # print('loss0: %f, loss1: %f' % (results['loss0'], results['loss1']))
         print('STEP: %d, epoch_idx: %d, lr: %f, time cost: %f'
             % (results['step'], epoch_idx, results['learning_rate'],
             time.time()-start_time))

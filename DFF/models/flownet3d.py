@@ -22,7 +22,7 @@ from tf_grouping import query_ball_point, group_point, knn_point
 def get_flowed_feature(
         pc1_xyz, pc1_rgb, pc1_graph_point_xyz, pc1_graph_feat,
         pc2_xyz, pc2_rgb, pc2_graph_point_xyz, pc2_graph_point_idx,
-        t_is_training
+        t_is_training, n_sample=4
 ):
     # 1 key, 2 non key
     pc_non_key_xyz = tf.expand_dims(pc2_xyz, 0)
@@ -31,7 +31,7 @@ def get_flowed_feature(
     pc_key_feat = tf.expand_dims(pc1_rgb, 0)
     print(pc_non_key_xyz, pc_non_key_feat, pc_key_feat)
     # [1, N_non_key ,3]
-    optical_flow_non_key_to_key = get_flownet3d_small_model(
+    optical_flow_non_key_to_key = get_flownet3d_large_model(
         pc_non_key_xyz,
         pc_non_key_feat,
         pc_key_xyz,
@@ -63,7 +63,7 @@ def get_flowed_feature(
         xyz1,
         optical_flow_non_key_to_key_graph_points,
         tf.expand_dims(pc1_graph_feat, 0),
-        n_sample=4
+        n_sample=n_sample
     )
     # [N_pc_non_key_graph, 300]
     t_features1 = tf.squeeze(t_features1, axis=0)
@@ -78,7 +78,11 @@ def feature_flow(xyz1, xyz2, flow_2_to_1, feature1, n_sample=4):
     :param feature1: [batch_size, N1, c]
     :return: warped_feature: [batch_size, N2, c]
     '''
+    # xyz1p = tf.Print(xyz1, [xyz1], "xyz1: ")
+    # xyz2p = tf.Print(xyz2, [xyz2], "xyz2: ")
+    # flow_2_to_1p = tf.Print(flow_2_to_1, [flow_2_to_1], "flow_2_to_1: ")
     xyz_2_in_1 = xyz2 + flow_2_to_1
+    # xyz_2_in_1p = tf.Print(xyz_2_in_1, [xyz_2_in_1], "xyz_2_in_1: ")
     # idx=[batch_size, N2, n_sample]
     _, idx = knn_point(n_sample, xyz1, xyz_2_in_1)
     print('idx: ', idx)

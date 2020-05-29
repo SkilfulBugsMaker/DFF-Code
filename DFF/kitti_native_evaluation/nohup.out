@@ -1,0 +1,1021 @@
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_AOS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_AOS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_BEV_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_BEV_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_BEV_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_BEV_AHS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_3D_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_3D_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_3D_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_3D_AHS.pdf'.
+  done.
+car_detection_AP : 60.030411 58.448158 57.804756
+car_orientation_AOS : 26.119921 25.026270 24.540176
+car_detection_BEV_AP : 58.735065 49.226181 49.061478
+car_orientation_BEV_AHS : 47.129803 36.726250 36.367229
+car_detection_3D_AP : 50.513096 41.189892 41.102058
+car_orientation_3D_AHS : 42.767075 32.766731 32.230347
+mkdir: cannot create directory '../inference//plot': File exists
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_AOS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_AOS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_BEV_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_BEV_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_BEV_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_BEV_AHS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_3D_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_3D_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_3D_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_3D_AHS.pdf'.
+  done.
+car_detection_AP : 9.820127 11.286332 11.680591
+car_orientation_AOS : 4.958613 5.153582 5.224655
+car_detection_BEV_AP : 10.389611 11.578045 11.570248
+car_orientation_BEV_AHS : 0.001784 0.001731 0.113989
+car_detection_3D_AP : 3.729604 4.463307 4.343335
+car_orientation_3D_AHS : 0.000592 0.000640 0.000658
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_AOS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_AOS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_BEV_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_BEV_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_BEV_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_BEV_AHS.pdf'.
+mkdir: cannot create directory '../inference//plot': File exists
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_AOS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_AOS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_3D_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_3D_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_3D_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_3D_AHS.pdf'.
+  done.
+car_detection_AP : 59.116787 58.911346 58.482353
+car_orientation_AOS : 25.259642 25.466421 25.041405
+car_detection_BEV_AP : 57.186882 48.574905 48.122070
+car_orientation_BEV_AHS : 46.384266 36.322914 35.872765
+car_detection_3D_AP : 50.864418 46.497440 46.116409
+car_orientation_3D_AHS : 42.991974 34.899395 34.237003
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_BEV_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_BEV_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_BEV_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_BEV_AHS.pdf'.
+mkdir: cannot create directory '../inference//plot': File exists
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_AOS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_AOS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_3D_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_3D_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_3D_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_3D_AHS.pdf'.
+  done.
+car_detection_AP : 59.116787 58.911346 58.482353
+car_orientation_AOS : 25.259642 25.466421 25.041405
+car_detection_BEV_AP : 57.186882 48.574905 48.122070
+car_orientation_BEV_AHS : 46.384266 36.322914 35.872765
+car_detection_3D_AP : 50.864418 46.497440 46.116409
+car_orientation_3D_AHS : 42.991974 34.899395 34.237003
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_BEV_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_BEV_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_BEV_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_BEV_AHS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_3D_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_3D_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_3D_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_3D_AHS.pdf'.
+  done.
+car_detection_AP : 59.116787 58.911346 58.482353
+car_orientation_AOS : 25.259642 25.466421 25.041405
+car_detection_BEV_AP : 57.186882 48.574905 48.122070
+car_orientation_BEV_AHS : 46.384266 36.322914 35.872765
+car_detection_3D_AP : 50.864418 46.497440 46.116409
+car_orientation_3D_AHS : 42.991974 34.899395 34.237003
+mkdir: cannot create directory '../inference//plot': File exists
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_AOS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_AOS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_BEV_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_BEV_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_BEV_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_BEV_AHS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_3D_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_3D_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_3D_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_3D_AHS.pdf'.
+  done.
+car_detection_AP : 13.010101 14.814960 14.621000
+car_orientation_AOS : 6.358328 8.945276 8.874149
+car_detection_BEV_AP : 8.694008 9.927888 10.194201
+car_orientation_BEV_AHS : 0.001292 0.001323 0.001415
+car_detection_3D_AP : 7.945483 8.982215 8.996865
+car_orientation_3D_AHS : 0.001365 0.001294 0.001235
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_AOS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_AOS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_BEV_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_BEV_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_BEV_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_BEV_AHS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_3D_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_3D_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_3D_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_3D_AHS.pdf'.
+  done.
+car_detection_AP : 58.861565 59.497124 58.868843
+car_orientation_AOS : 25.379440 25.683558 25.206984
+car_detection_BEV_AP : 57.530308 48.691681 48.447342
+car_orientation_BEV_AHS : 46.537125 36.368160 35.956955
+car_detection_3D_AP : 50.632656 46.440678 45.871037
+car_orientation_3D_AHS : 42.835583 34.867821 34.104534
+mkdir: cannot create directory '../inference//plot': File exists
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_AOS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_AOS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_BEV_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_BEV_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_BEV_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_BEV_AHS.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_detection_3D_AP.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_detection_3D_AP.pdf'.
+sh: 1: gnuplot: not found
+sh: 1: gnuplot: not found
+Error: /undefinedfilename in (car_orientation_3D_AHS.eps)
+Operand stack:
+
+Execution stack:
+   %interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   --nostringval--   false   1   %stopped_push
+Dictionary stack:
+   --dict:960/1684(ro)(G)--   --dict:0/20(G)--   --dict:77/200(L)--
+Current allocation mode is local
+Last OS error: No such file or directory
+GPL Ghostscript 9.26: Unrecoverable error, exit code 1
+PDFCROP 1.38, 2012/11/02 - Copyright (c) 2002-2012 by Heiko Oberdiek.
+
+!!! Warning: Empty Bounding Box is returned by Ghostscript!
+!!!   Page 1: 0 0 0 0
+!!! Either there is a problem with the page or with Ghostscript.
+!!! Recovery is tried by embedding the page in its original size.
+
+==> 1 page written on `car_orientation_3D_AHS.pdf'.
+  done.
+car_detection_AP : 12.698652 21.291866 20.074043
+car_orientation_AOS : 6.395428 13.705860 13.074742
+car_detection_BEV_AP : 8.980716 10.514357 10.419408
+car_orientation_BEV_AHS : 0.001626 0.001484 0.001468
+car_detection_3D_AP : 7.555655 8.676967 8.571214
+car_orientation_3D_AHS : 0.001473 0.001304 0.001271

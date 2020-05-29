@@ -101,6 +101,7 @@ def multi_layer_neural_network_fn(features, Ks=(64, 32, 64), is_logits=False,
             features = slim.fully_connected(features, Ks[i],
                 activation_fn=activation_fn_dict[activation_type],
                 normalizer_fn=normalization_fn_dict[normalization_type])
+    # featuresp = tf.Print(features, [features], 'multi_layer_neural_network_fn features:')
     return features
 
 def graph_scatter_max_fn(point_features, point_centers, num_centers):

@@ -1,6 +1,7 @@
 """This file implement an inference pipeline for Point-GNN on KITTI dataset"""
 
 import os
+import ast
 import time
 import argparse
 import multiprocessing
@@ -78,10 +79,11 @@ if IS_TEST:
         is_training=False)
 else:
     dataset = KittiDataset(
-        os.path.join(DATASET_DIR, 'image/training/image_2'),
-        os.path.join(DATASET_DIR, 'velodyne/training/velodyne/'),
-        os.path.join(DATASET_DIR, 'calib/training/calib/'),
-        os.path.join(DATASET_DIR, 'labels/training/label_2'),
+        os.path.join(DATASET_DIR, 'image/testing/image_2/'),
+        os.path.join(DATASET_DIR, 'velodyne/testing/velodyne/'),
+        os.path.join(DATASET_DIR, 'calib/testing/calib/'),
+        os.path.join(DATASET_DIR, 'labels/testing/label_2/'),
+        # "./splits/test_split_2.txt",
         # DATASET_SPLIT_FILE,
         num_classes=config['num_classes'])
 NUM_TEST_SAMPLE = dataset.num_files
@@ -162,11 +164,19 @@ t_features = tf.cond(
         t_key_graph_features,
         t_vertex_coord_list[0],     # pc2_xyz
         t_initial_vertex_features,  # pc2_rgb
-        t_vertex_coord_list[-1],    # pc2_graph_point_xyz
-        t_keypoint_indices_list[-1],    # pc2_graph_point_idx
-        t_is_training
+        t_vertex_coord_list[1],    # pc2_graph_point_xyz
+        t_keypoint_indices_list[1],    # pc2_graph_point_idx
+        t_is_training,
+        n_sample=2
     )
 )
+#t_features = model.extract_features(
+#        t_initial_vertex_features,
+#        t_vertex_coord_list,
+#        t_keypoint_indices_list,
+#        t_edges_list,
+#        t_is_training
+#)
 t_logits, t_pred_box = model.predict(t_features, t_is_training)
 
 t_probs = model.postprocess(t_logits)
@@ -178,8 +188,8 @@ fetches_key = {
     'step': global_step,
     'predictions': t_predictions,
     'probs': t_probs,
+    'pred_box': t_pred_box,
     'key_graph_features': t_features,
-    'pred_box': t_pred_box
 }
 fetches_non_key = {
     'step': global_step,
@@ -227,7 +237,23 @@ gt_color_map = {
     'Cyclist': (255,165,0),
 }
 # runing network ==============================================================
-time_dict = {}
+time_dict = {
+    'flow inference': 0
+}
+variables = tf.get_collection(tf.GraphKeys.VARIABLES)
+with open('pointgnn_varlist.txt', 'r') as f:
+    varlist = ast.literal_eval(f.read())
+print(len(varlist))
+print(len([v for v in variables if v.name in varlist and v.name != 'Variable:0']))
+print(len([v for v in variables if v.name not in varlist]))
+print(len(variables))
+
+# saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
+saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist])
+saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
+# saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
+# saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
+
 saver = tf.train.Saver()
 graph = tf.get_default_graph()
 gpu_options = tf.GPUOptions(allow_growth=True)
@@ -235,9 +261,12 @@ with tf.Session(graph=graph,
     config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
     sess.run(tf.variables_initializer(tf.global_variables()))
     sess.run(tf.variables_initializer(tf.local_variables()))
-    model_path = tf.train.latest_checkpoint(CHECKPOINT_PATH)
-    print('Restore from checkpoint %s' % model_path)
-    saver.restore(sess, model_path)
+    # model_path = tf.train.latest_checkpoint(CHECKPOINT_PATH)
+    # print('Restore from checkpoint %s' % model_path)
+    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-1400000')
+    saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
+ 
+    # saver.restore(sess, model_path)
     previous_step = sess.run(global_step)
     key_frame_info = {
         "key_pc_xyz": None,
@@ -245,7 +274,7 @@ with tf.Session(graph=graph,
         "key_graph_features": None,
         "key_graph_xyz": None
     }
-    KEY_FRAME_STEP = 3
+    KEY_FRAME_STEP = 2 
     for frame_idx in tqdm(range(0, NUM_TEST_SAMPLE)):
         start_time = time.time()
         if VISUALIZATION_LEVEL == 2:
@@ -315,7 +344,7 @@ with tf.Session(graph=graph,
             key_frame_info["key_pc_xyz"] = vertex_coord_list[0]
             key_frame_info["key_pc_rgb"] = input_v
             key_frame_info["key_graph_features"] = results["key_graph_features"]
-            key_frame_info["key_graph_xyz"] = vertex_coord_list[-1]
+            key_frame_info["key_graph_xyz"] = vertex_coord_list[1]
         else:
             # non key frame
             feed_dict = {
@@ -332,10 +361,13 @@ with tf.Session(graph=graph,
                 dict(zip(t_keypoint_indices_list, keypoint_indices_list)))
             feed_dict.update(dict(zip(t_vertex_coord_list, vertex_coord_list)))
             results = sess.run(fetches_non_key, feed_dict=feed_dict)
-        print(results)
         gnn_time = time.time()
         time_dict['gnn inference'] = time_dict.get('gnn inference', 0) \
             + gnn_time - graph_time
+        if frame_idx % KEY_FRAME_STEP == 0:
+            print("gnn inference time: %f" % (gnn_time - graph_time))
+        else:
+            print("feature flow time: %f" % (gnn_time - graph_time))
         # box decoding =======================================================
         box_probs = results['probs']
         box_labels = np.tile(np.expand_dims(np.arange(NUM_CLASSES), axis=0),
