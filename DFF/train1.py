@@ -21,7 +21,7 @@ from dataset.kitti_dataset import KittiDataset
 from models.graph_gen import get_graph_generate_fn
 from models.models import get_model
 
-from models.flownet3d import get_flownet3d_small_model, get_flownet3d_large_model, feature_flow
+from models.flownet3d import get_flownet3d_small_model, get_flownet3d_large_model, feature_flow, get_flowed_feature_train
 
 
 from models.box_encoding import get_box_decoding_fn, get_box_encoding_fn,\
@@ -63,10 +63,11 @@ else:
     config = config_complete
 # input function ==============================================================
 dataset = KittiDataset(
-    os.path.join(DATASET_DIR, 'image/training/image_2'),
+    os.path.join(DATASET_DIR, 'image/training/image_2/'),
     os.path.join(DATASET_DIR, 'velodyne/training/velodyne/'),
     os.path.join(DATASET_DIR, 'calib/training/calib/'),
-    os.path.join(DATASET_DIR, 'labels/training/label_2'),
+    os.path.join(DATASET_DIR, 'labels/training/label_2/'),
+    # './splits/split-test-last60.txt',
     # DATASET_SPLIT_FILE,
     num_classes=config['num_classes'])
 NUM_CLASSES = dataset.num_classes
@@ -293,58 +294,31 @@ for gi in range(NUM_GPU):
             # key frame features
             t_features = model.extract_features(
                 t_initial_vertex_features, t_vertex_coord_list,
-                t_keypoint_indices_list, t_edges_list, t_is_training)
+                t_keypoint_indices_list, t_edges_list, tf.constant(False))
             # ======================= modify below =======================
             # predict non-key frame to key frame optical flow, 几万点
-            pc_non_key_xyz = tf.expand_dims(t_vertex_coord_list1[0], 0)
-            pc_non_key_feat = tf.expand_dims(t_initial_vertex_features1, 0)
-            pc_key_xyz = tf.expand_dims(t_vertex_coord_list[0], 0)
-            pc_key_feat = tf.expand_dims(t_initial_vertex_features, 0)
-            print(pc_non_key_xyz, pc_non_key_feat, pc_key_feat)
-            # [1, N_non_key ,3]
-            optical_flow_non_key_to_key = get_flownet3d_small_model(
-                pc_non_key_xyz,
-                pc_non_key_feat,
-                pc_key_xyz,
-                pc_key_feat,
-                is_training=t_is_training)
-            print(optical_flow_non_key_to_key)
-            # down-sampling optical flow
-            # [1, N_non_key_graph, 1 ,3]
-            optical_flow_non_key_to_key_graph_points = tf.gather(
-                optical_flow_non_key_to_key, t_keypoint_indices_list1[1], axis=1
+
+            t_features1 = get_flowed_feature_train(
+                t_vertex_coord_list[0],
+                t_initial_vertex_features,
+                t_vertex_coord_list[1],
+                t_features,
+                t_vertex_coord_list1[0],     # pc2_xyz
+                t_initial_vertex_features1,  # pc2_rgb
+                t_vertex_coord_list1[1],    # pc2_graph_point_xyz
+                t_keypoint_indices_list1[0],    # pc2_graph_point_idx
+                t_is_training,
+                n_sample=1 
             )
-            print(optical_flow_non_key_to_key_graph_points)
-            # [1, N_non_key_graph ,3]
-            optical_flow_non_key_to_key_graph_points = tf.squeeze(
-                optical_flow_non_key_to_key_graph_points, axis=2
-            )
-            print(optical_flow_non_key_to_key_graph_points)
-            # key frame graph point xyz
-            # [1, N_key_graph ,3]
-            xyz = tf.expand_dims(t_vertex_coord_list[1], 0)
-            print('xyz: ', xyz)
-            # non key frame graph point xyz
-            # [1, N_non_key_graph, 3]
-            xyz1 = tf.expand_dims(t_vertex_coord_list1[1], 0)
-            print('xyz1: ', xyz1)
-            # [1, N_pc_non_key_graph, 300]
-            t_features1 = feature_flow(
-                xyz,
-                xyz1,
-                optical_flow_non_key_to_key_graph_points,
-                tf.expand_dims(t_features, 0),
-                n_sample=4
-            )
-            # [N_pc_non_key_graph, 300]
-            t_features1 = tf.squeeze(t_features1, axis=0)
+
+            
             # ======================= modify above =======================
             print(t_features, t_features1)
-            t_logits, t_pred_box = model.predict(t_features, t_is_training)
+            t_logits, t_pred_box = model.predict(t_features1, tf.constant(False))
             t_probs = model.postprocess(t_logits)
             t_predictions = tf.argmax(t_probs, axis=-1, output_type=tf.int32)
-            t_loss_dict = model.loss(t_logits, t_class_labels, t_pred_box,
-                t_encoded_gt_boxes, t_valid_gt_boxes, **config['loss'])
+            t_loss_dict = model.loss(t_logits, t_class_labels1, t_pred_box,
+                t_encoded_gt_boxes1, t_valid_gt_boxes1, **config['loss'])
             t_cls_loss = t_loss_dict['cls_loss']
             t_loc_loss = t_loss_dict['loc_loss']
             t_reg_loss = t_loss_dict['reg_loss']
@@ -353,23 +327,24 @@ for gi in range(NUM_GPU):
             t_classwise_loc_loss = t_loss_dict['classwise_loc_loss']
 
             # ==================== modify below ===================
-            t_logits1, t_pred_box1 = model.predict(t_features1, t_is_training)
-            t_probs1 = model.postprocess(t_logits1)
-            t_predictions1 = tf.argmax(t_probs1, axis=-1, output_type=tf.int32)
-            t_loss_dict1 = model.loss(
-                t_logits1, t_class_labels1, t_pred_box1,
-                t_encoded_gt_boxes1, t_valid_gt_boxes1, **config['loss']
-            )
-            t_cls_loss1 = t_loss_dict1['cls_loss']
-            t_loc_loss1 = t_loss_dict1['loc_loss']
-            t_reg_loss1 = t_loss_dict1['reg_loss']
-            t_num_endpoint1 = t_loss_dict1['num_endpoint']
-            t_num_valid_endpoint1 = t_loss_dict1['num_valid_endpoint']
-            t_classwise_loc_loss1 = t_loss_dict1['classwise_loc_loss']
+            # t_logits1, t_pred_box1 = model.predict(t_features1, t_is_training)
+            # t_probs1 = model.postprocess(t_logits1)
+            # t_predictions1 = tf.argmax(t_probs1, axis=-1, output_type=tf.int32)
+            # t_loss_dict1 = model.loss(
+            #     t_logits1, t_class_labels1, t_pred_box1,
+            #     t_encoded_gt_boxes1, t_valid_gt_boxes1, **config['loss']
+            # )
+            # t_cls_loss1 = t_loss_dict1['cls_loss']
+            # t_loc_loss1 = t_loss_dict1['loc_loss']
+            # t_reg_loss1 = t_loss_dict1['reg_loss']
+            # t_num_endpoint1 = t_loss_dict1['num_endpoint']
+            # t_num_valid_endpoint1 = t_loss_dict1['num_valid_endpoint']
+            # t_classwise_loc_loss1 = t_loss_dict1['classwise_loc_loss']
             # ==================== modify above ===================
-            t_total_loss0 = t_cls_loss + t_loc_loss + t_reg_loss
-            t_total_loss1 = t_cls_loss1 + t_loc_loss1 + t_reg_loss1
-            t_total_loss = (t_total_loss0 + t_total_loss1) / 2
+            # t_total_loss0 = t_cls_loss + t_loc_loss + t_reg_loss
+            # t_total_loss1 = t_cls_loss1 + t_loc_loss1 + t_reg_loss1
+            # t_total_loss = (t_total_loss0 + t_total_loss1) / 2
+            t_total_loss = t_cls_loss + t_loc_loss + t_reg_loss
             input_tensor_sets.append(
                 {
                     't_initial_vertex_features': t_initial_vertex_features,
@@ -407,18 +382,19 @@ for gi in range(NUM_GPU):
                     't_num_valid_endpoint': t_num_valid_endpoint,
                     't_classwise_loc_loss': t_classwise_loc_loss,
 
-                    't_logits1': t_logits1,
-                    't_pred_box1': t_pred_box1,
-                    't_probs1': t_probs1,
-                    't_predictions1': t_predictions1,
-                    't_cls_loss1': t_cls_loss1,
-                    't_loc_loss1': t_loc_loss1,
-                    't_reg_loss1': t_reg_loss1,
-                    't_num_endpoint1': t_num_endpoint1,
-                    't_num_valid_endpoint1': t_num_valid_endpoint1,
-                    't_classwise_loc_loss1': t_classwise_loc_loss1,
-                    't_total_loss0': t_total_loss0,
-                    't_total_loss1': t_total_loss1,
+                    # 't_logits1': t_logits1,
+                    # 't_pred_box1': t_pred_box1,
+                    # 't_probs1': t_probs1,
+                    # 't_predictions1': t_predictions1,
+                    # 't_cls_loss1': t_cls_loss1,
+                    # 't_loc_loss1': t_loc_loss1,
+                    # 't_reg_loss1': t_reg_loss1,
+                    # 't_num_endpoint1': t_num_endpoint1,
+                    # 't_num_valid_endpoint1': t_num_valid_endpoint1,
+                    # 't_classwise_loc_loss1': t_classwise_loc_loss1,
+
+                    # 't_total_loss0': t_total_loss0,
+                    # 't_total_loss1': t_total_loss1,
                     't_total_loss': t_total_loss
                  })
 
@@ -461,7 +437,7 @@ t_total_loss_cross_gpu = tf.reduce_mean(
     [t['t_total_loss'] for t in input_tensor_sets]
 )
 
-t_class_labels = input_tensor_sets[0]['t_class_labels']
+t_class_labels = input_tensor_sets[0]['t_class_labels1']
 t_predictions = input_tensor_sets[0]['t_predictions']
 t_probs = input_tensor_sets[0]['t_probs']
 
@@ -530,7 +506,8 @@ metrics_update_ops = {
     'cls_loss': t_mean_cls_loss_op,
     'loc_loss': t_mean_loc_loss_op,
     'reg_loss': t_mean_reg_loss_op,
-    'total_loss': t_mean_total_loss_op,}
+    'total_loss': t_mean_total_loss_op,
+}
 metrics_update_ops.update(t_recall_update_ops)
 metrics_update_ops.update(t_precision_update_ops)
 metrics_update_ops.update(t_mAP_update_ops)
@@ -578,8 +555,8 @@ fetches = {
     'train_op': train_op,
     'step': global_step,
     'learning_rate': t_learning_rate,
-    'loss0': input_tensor_sets[0]['t_total_loss0'],
-    'loss1': input_tensor_sets[0]['t_total_loss1']
+    # 'loss0': input_tensor_sets[0]['t_total_loss0'],
+    # 'loss1': input_tensor_sets[0]['t_total_loss1']
     # 't_features_list': input_tensor_sets[0]['t_features_list'],
     # 't_initial_vertex_features': input_tensor_sets[0]['t_initial_vertex_features']
     # 'clsloss': input_tensor_sets[0]['t_cls_loss'],
@@ -708,8 +685,8 @@ with tf.Session(graph=graph,
     allow_soft_placement=True, gpu_options=gpu_options,)) as sess:
     print('before init')
     # sess.run(init)
-    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-1400000')
-    saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
+    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN-rgb/model-1400000')
+    saver_flownet.restore(sess, './pretrained_model/flownet3D-kitti-finetune/model-finetune.ckpt')
     sess.run(global_step.initializer)
     # sess.run(tf.variables_initializer(tf.global_variables()))
     # sess.run(init)
@@ -819,7 +796,7 @@ with tf.Session(graph=graph,
                 batch_ctr += 1
             else:
                 results = sess.run(fetches, feed_dict=total_feed_dict)
-            print('loss0: %f, loss1: %f' % (results['loss0'], results['loss1']))
+            # print('loss0: %f, loss1: %f' % (results['loss0'], results['loss1']))
             # print("t_initial_vertex_features", results['t_features_list'])
             # print('features: ',results['features'])
             # print('features1: ',results['features1'])

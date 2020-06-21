@@ -62,6 +62,7 @@ def multi_layer_downsampling_select(points_xyz, base_voxel_size, levels=[1],
     returns: vertex_coord_list, keypoint_indices_list
     """
     # Voxel downsampling
+
     vertex_coord_list = multi_layer_downsampling(
         points_xyz, base_voxel_size, levels=levels, add_rnd3d=add_rnd3d)
     num_levels = len(vertex_coord_list)

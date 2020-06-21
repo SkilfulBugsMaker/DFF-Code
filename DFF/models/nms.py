@@ -256,7 +256,7 @@ def nms_boxes_3d(class_labels, detection_boxes_3d, detection_scores,
 def nms_boxes_3d_uncertainty(class_labels, detection_boxes_3d, detection_scores,
     overlapped_thres=0.5, overlapped_fn=overlapped_boxes_3d, appr_factor=10.0,
     top_k=-1, attributes=None):
-
+    return class_labels, detection_boxes_3d, detection_scores, attributes
     class_labels, detection_scores, detection_boxes_3d, attributes = \
         bboxes_sort(
             class_labels, detection_scores, detection_boxes_3d, top_k=top_k,
@@ -298,3 +298,71 @@ def nms_boxes_3d_score_only(class_labels, detection_boxes_3d, detection_scores,
             nms_threshold=overlapped_thres, overlapped_fn=overlapped_fn,
             appr_factor=appr_factor, attributes=attributes)
     return class_labels, detection_boxes_3d, detection_scores, attributes
+
+
+def my_nms(class_labels, detection_boxes_3d, detection_scores,
+    overlapped_thres=0.5, overlapped_fn=overlapped_boxes_3d, appr_factor=10.0,
+    top_k=-1, attributes=None):
+    class_labels, detection_scores, detection_boxes_3d, attributes = \
+        bboxes_sort(
+            class_labels, detection_scores, detection_boxes_3d, top_k=top_k,
+            attributes=attributes)
+    # nms
+    class_labels, detection_scores, detection_boxes_3d, attributes = \
+        bbox_my_nms(
+            class_labels, detection_scores, detection_boxes_3d,
+            nms_threshold=overlapped_thres, overlapped_fn=overlapped_fn,
+            appr_factor=appr_factor, attributes=attributes)
+    return class_labels, detection_boxes_3d, detection_scores, attributes
+
+def bbox_my_nms(classes, scores, bboxes, scores_threshold=0.25,
+    nms_threshold=0.45, overlapped_fn=overlapped_boxes_3d, appr_factor=10.0,
+    attributes=None):
+    """Apply non-maximum selection to bounding boxes.
+    """
+    boxes_corners = boxes_3d_to_corners(bboxes)
+    # boxes_corners = bboxes
+    # convert to pixels
+    # boxes_corners = np.int32(boxes_corners*appr_factor)
+    keep_bboxes = np.ones(scores.shape, dtype=np.bool)
+    for i in range(scores.size-1):
+        if keep_bboxes[i]:
+            if not check_box(bboxes, i):
+                keep_bboxes[i] = False
+                continue
+            # Only compute on the rest of bboxes
+            valid = keep_bboxes[(i+1):]
+            # Computer overlap with bboxes which are following.
+            overlap = overlapped_fn(
+                boxes_corners[i], boxes_corners[(i+1):][valid])
+            # Overlap threshold for keeping + checking part of the same class
+            remove_overlap = np.logical_and(
+                overlap > nms_threshold, classes[(i+1):][valid] == classes[i])
+            overlaped_bboxes = np.concatenate(
+                [bboxes[(i+1):][valid][remove_overlap], bboxes[[i]]], axis=0)
+            boxes_mean = np.median(overlaped_bboxes, axis=0)
+            bboxes[i][:] = boxes_mean[:]
+            boxes_corners_mean = boxes_3d_to_corners(
+                np.expand_dims(boxes_mean, axis=0))
+            boxes_mean_overlap = overlapped_fn(boxes_corners_mean[0],
+                boxes_corners[(i+1):][valid][remove_overlap])
+            scores[i] += np.sum(
+                scores[(i+1):][valid][remove_overlap]*boxes_mean_overlap)
+            keep_bboxes[(i+1):][valid] = np.logical_not(remove_overlap)##
+    idxes = np.where(keep_bboxes)
+    classes = classes[idxes]
+    scores = scores[idxes]
+    bboxes = bboxes[idxes]
+    if attributes is not None:
+        attributes = attributes[idxes]
+    return classes, scores, bboxes, attributes
+
+
+def check_box(bboxes, i, threshold=3):
+    box_location = bboxes[:, 0:3] # x, y, z
+    i_location = box_location[i]
+    cnt = 0
+    for j in range(len(box_location)):
+        if np.linalg.norm(i_location-box_location[j], ord=1) < 0.5:
+            cnt += 1
+    return True if cnt >= threshold else False

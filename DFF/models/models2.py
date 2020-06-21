@@ -161,7 +161,7 @@ class MultiLayerFastLocalGraphModelV2(object):
                         box_encoding_len=self.box_encoding_len,
                         **predictor_config['kwargs'])
                     print("Prediction %d classes" % self.num_classes)
-        return tfeatures, logits, box_encodings
+        return logits, box_encodings
 
     def postprocess(self, logits):
         """Output predictions. """

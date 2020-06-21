@@ -83,7 +83,7 @@ else:
         os.path.join(DATASET_DIR, 'velodyne/testing/velodyne/'),
         os.path.join(DATASET_DIR, 'calib/testing/calib/'),
         os.path.join(DATASET_DIR, 'labels/testing/label_2/'),
-        # "./splits/test_split_2.txt",
+        # "./splits/split-test-first60.txt",
         # DATASET_SPLIT_FILE,
         num_classes=config['num_classes'])
 NUM_TEST_SAMPLE = dataset.num_files
@@ -165,9 +165,9 @@ t_features = tf.cond(
         t_vertex_coord_list[0],     # pc2_xyz
         t_initial_vertex_features,  # pc2_rgb
         t_vertex_coord_list[1],    # pc2_graph_point_xyz
-        t_keypoint_indices_list[1],    # pc2_graph_point_idx
+        t_keypoint_indices_list[0],    # pc2_graph_point_idx
         t_is_training,
-        n_sample=2
+        n_sample=1
     )
 )
 #t_features = model.extract_features(
@@ -248,11 +248,13 @@ print(len([v for v in variables if v.name in varlist and v.name != 'Variable:0']
 print(len([v for v in variables if v.name not in varlist]))
 print(len(variables))
 
+
 # saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
-saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist])
-saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
-# saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
+# saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist])
 # saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
+
+saver_pointgnn = tf.train.Saver([v for v in variables if v.name in varlist and v.name != 'Variable:0'])
+saver_flownet = tf.train.Saver([v for v in variables if v.name not in varlist])
 
 saver = tf.train.Saver()
 graph = tf.get_default_graph()
@@ -263,10 +265,11 @@ with tf.Session(graph=graph,
     sess.run(tf.variables_initializer(tf.local_variables()))
     # model_path = tf.train.latest_checkpoint(CHECKPOINT_PATH)
     # print('Restore from checkpoint %s' % model_path)
-    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN/model-1400000')
-    saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
- 
     # saver.restore(sess, model_path)
+    saver_pointgnn.restore(sess, './pretrained_model/Point-GNN-rgb/model-1400000')
+    # saver_flownet.restore(sess, './pretrained_model/flownet3D/model.ckpt')
+    saver_flownet.restore(sess, './pretrained_model/flownet3D-kitti-finetune/model-finetune.ckpt')
+    
     previous_step = sess.run(global_step)
     key_frame_info = {
         "key_pc_xyz": None,
@@ -274,7 +277,7 @@ with tf.Session(graph=graph,
         "key_graph_features": None,
         "key_graph_xyz": None
     }
-    KEY_FRAME_STEP = 2 
+    KEY_FRAME_STEP = 2
     for frame_idx in tqdm(range(0, NUM_TEST_SAMPLE)):
         start_time = time.time()
         if VISUALIZATION_LEVEL == 2:
@@ -324,6 +327,11 @@ with tf.Session(graph=graph,
         if config['label_method'] == 'Pedestrian_and_Cyclist':
             label_map = {'Background': 0, 'Pedestrian': 1, 'Cyclist':3,
                 'DontCare': 5}
+
+        # print("input_v.shape: ", np.array(input_v).shape)
+        # print("vertex_coord_list.shape: ", np.array(vertex_coord_list).shape)
+        # print("keypoint_indices_list.shape: ", keypoint_indices_list[1])
+        # print("vertex_coord_list: ", vertex_coord_list[1] == vertex_coord_list[2])
         # run forwarding =====================================================
         if frame_idx % KEY_FRAME_STEP == 0:
             # key frame
@@ -341,6 +349,7 @@ with tf.Session(graph=graph,
                 dict(zip(t_keypoint_indices_list, keypoint_indices_list)))
             feed_dict.update(dict(zip(t_vertex_coord_list, vertex_coord_list)))
             results = sess.run(fetches_key, feed_dict=feed_dict)
+            # modify 0, 1
             key_frame_info["key_pc_xyz"] = vertex_coord_list[0]
             key_frame_info["key_pc_rgb"] = input_v
             key_frame_info["key_graph_features"] = results["key_graph_features"]
@@ -400,7 +409,7 @@ with tf.Session(graph=graph,
             # nms ============================================================
             if USE_BOX_MERGE and USE_BOX_SCORE:
                 (class_labels, detection_boxes_3d, detection_scores,
-                nms_indices) = nms.nms_boxes_3d_uncertainty(
+                nms_indices) = nms.my_nms(
                     box_labels, decoded_boxes, detection_scores,
                     overlapped_fn=nms.overlapped_boxes_3d_fast_poly,
                     overlapped_thres=config['nms_overlapped_thres'],
@@ -496,7 +505,7 @@ with tf.Session(graph=graph,
                 height = clip_ymax - clip_ymin
                 truncation_rate = 1.0 - (clip_ymax - clip_ymin)*(
                     clip_xmax - clip_xmin)/((ymax - ymin)*(xmax - xmin))
-                if truncation_rate > 0.4:
+                if truncation_rate > 0.8:
                     continue
                 x3d, y3d, z3d, l, h, w, yaw = detection_boxes_3d[i]
                 assert l > 0, str(i)
@@ -643,5 +652,8 @@ with tf.Session(graph=graph,
         total_time = time.time()
         time_dict['total'] = time_dict.get('total', 0) \
             + total_time - start_time
+        
+        
+
     for key in time_dict:
         print(key + " time : " + str(time_dict[key]/NUM_TEST_SAMPLE))

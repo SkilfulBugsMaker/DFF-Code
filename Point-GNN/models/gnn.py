@@ -101,7 +101,8 @@ def multi_layer_neural_network_fn(features, Ks=(64, 32, 64), is_logits=False,
             features = slim.fully_connected(features, Ks[i],
                 activation_fn=activation_fn_dict[activation_type],
                 normalizer_fn=normalization_fn_dict[normalization_type])
-    return features
+    featuresp = tf.Print(features, [features], "multi_layer_neural_network_fn")
+    return featuresp
 
 def graph_scatter_max_fn(point_features, point_centers, num_centers):
     aggregated = tf.math.unsorted_segment_max(point_features,

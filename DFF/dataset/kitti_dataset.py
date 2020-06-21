@@ -606,7 +606,9 @@ class KittiDataset(object):
             mask *=(
                 velo_points[:, 2] > z_range[0])*(velo_points[:, 2] < z_range[1])
             return Points(xyz = velo_points[mask], attr = reflections[mask])
-        return Points(xyz = velo_points, attr = reflections)
+        else:
+            mask = (velo_points[:, 2] > -1.8)
+            return Points(xyz = velo_points[mask], attr = reflections[mask])
 
     def get_cam_points(self, frame_idx,
         downsample_voxel_size=None, calib=None, xyz_range=None):
@@ -678,6 +680,8 @@ class KittiDataset(object):
         height = image.shape[0]
         width = image.shape[1]
         img_points = self.cam_points_to_image(front_cam_points, calib)
+        ##################################
+
         img_points_in_image_idx = np.logical_and.reduce(
             [img_points.xyz[:,0]>0, img_points.xyz[:,0]<width,
              img_points.xyz[:,1]>0, img_points.xyz[:,1]<height])

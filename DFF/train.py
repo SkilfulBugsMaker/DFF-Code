@@ -413,8 +413,6 @@ grads_cross_gpu = average_gradients(grads_cross_gpu)
 train_op = optimizer.apply_gradients(grads_cross_gpu, global_step=global_step)
 
 
-t_features_shape_op = tf.shape(t_features)
-t_vertex_coord_list_shape_op = tf.shape(t_vertex_coord_list)
 fetches = {
 #    't_features_shape': t_features_shape_op,
 #    't_vertex_coord_list_shape': t_vertex_coord_list_shape_op,
