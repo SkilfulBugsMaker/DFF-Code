@@ -1,4 +1,7 @@
 # User defined
+Flownet3D/
+Point-GNN/
+
 checkpoints/eval
 kitti
 kitti_rm_ground
